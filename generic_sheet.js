@@ -757,8 +757,12 @@ function createTextArea(placeHolder, value) {
 	input.value = value;
 	input.placeholder = placeHolder;
     input.maxLength = 500;
-    input.cols = "auto";
-    input.rows = "auto";
+    input.cols = 40;   
+	if (value.length > 50) input.rows = value.length % 50;
+	else { 
+		input.rows = "auto";
+		input.cols = "auto"; 
+	};
 	
 	return input;
 }
