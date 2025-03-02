@@ -339,27 +339,32 @@ function parseMagic(param) {
 		Object.entries(magia.list).forEach((magialvl) => {
 			var parentDiv = createDiv(level, magialvl, false)
 			var name = parentDiv.children[0];
-			var description = parentDiv.children[1];
+			var descriptionInput = parentDiv.children[1];
+			var description = parentDiv.children[2];
 			
 			name.addEventListener("click", (event) => {
-				description.style = null;
+				descriptionInput.style = null;
+				description.style.display = "none";
 				name.clicked = true;
 			});
-			name.onmouseover = () => description.style.display = 'block';
+			name.addEventListener("mouseover", (event) => {
+				if (!name.clicked) description.style.display = 'block';
+			});
+			
 			name.onmouseout = () => {
 				if (!name.clicked) description.style.display = "none";
 			};
 			
 			name.addEventListener("change", (event) => {
 				if (name.value.length != magialvl[1].name.length && name.value.length != 0) {
-					if (local) saveMagicLocal(level, magialvl[0], {name: name.value, description: description.value});
+					if (local) saveMagicLocal(level, magialvl[0], {name: name.value, description: description.value}, false);
 					else onInputChange({name: name.value, description: description.value}, "magias", magialvl[0], level);
 				}
 			});
 			
 			description.addEventListener("change", (event) => {
 				if (description.value.length != magialvl[1].description.length && description.value.length != 0) {
-					if (local) saveMagicLocal(level, magialvl[0], {name: name.value, description: description.value});
+					if (local) saveMagicLocal(level, magialvl[0], {name: name.value, description: description.value}, false);
 					else onInputChange({name: name.value, description: description.value}, "magias", magialvl[0], level);
 				}
 			});
@@ -372,6 +377,8 @@ function parseMagic(param) {
 			
 			parentDiv.addEventListener("focusout", (event) => {
 				if (!parentDiv.contains(event.relatedTarget)) {
+					descriptionInput.style.display = "none";
+					description.value = descriptionInput.value;
 					description.style.position = "absolute";
 					description.style.color =  "white";
 					description.style.display = "none";
@@ -389,12 +396,15 @@ function parseMagic(param) {
 		var masterDiv = createDiv(level, [id, {name: "", description: ""}], true);
 		var emptyx = masterDiv.children[0];
 		var emptyy = masterDiv.children[1];
+		var emptyz = masterDiv.children[2];
+		
+		emptyz.style.display = "none";
 		
 		magiaDOM.appendChild(div);
 		masterDiv.addEventListener("focusout", (event) => {
-			if (emptyx.value.length >0 && emptyy.value.length >0) {
-				if (local) saveMagicLocal(level, id, {name: emptyx.value, description: emptyy.value});
-				else saveMagic(level, id, {name: emptyx.value, description: emptyy.value});
+			if (emptyx.value.length >0 && emptyy.value.length >0) {		
+				if (local) saveMagicLocal(level, id, {name: emptyx.value, description: emptyy.value}, true);
+				else saveMagic(level, id, {name: emptyx.value, description: emptyy.value}, true);
 			}
 		});
 		
@@ -408,32 +418,39 @@ function parseGifts(param) {
 	 Object.entries(gifts).forEach((key) => {
 		var parentDiv = createNewDiv([key[0], key[1]], false)
 		var name = parentDiv.children[0];
-		var description = parentDiv.children[1];
+		var descriptionInput = parentDiv.children[1];
+		var description = parentDiv.children[2];
 			
 			name.addEventListener("mousemove", (event) => {
-				description.style.display = "block";
-				description.style.left = `${event.pageX + 5}px`;
-				description.style.top = `${event.pageY + 5}px`;
+				if (!name.clicked) {
+					description.style.display = "block";
+					description.style.left = `${event.pageX + 5}px`;
+					description.style.top = `${event.pageY + 5}px`;
+				}
 			});
 			name.addEventListener("click", (event) => {
-				description.style = null;
+				descriptionInput.style = null;
+				description.style.display = "none";
 				name.clicked = true;
 			});
-			name.onmouseover = () => description.style.display = 'block';
+			
+			name.addEventListener("mouseover", (event) => {
+				if (!name.clicked) description.style.display = 'block';
+			});
 			name.onmouseout = () => {
 				if (!name.clicked) description.style.display = "none";
 			};
 			
 			name.addEventListener("change", (event) => {
 				if (name.value.length != key[1].name.length && name.value.length != 0) {
-					if (local) saveGiftLocal(key[0], {name: name.value, description: description.value});
+					if (local) saveGiftLocal(key[0], {name: name.value, description: description.value}, false);
 					else onInputChange({name: name.value, description: description.value}, "dotes", key[0]);
 				}
 			});
 			
 			description.addEventListener("change", (event) => {
 				if (description.value.length != key[1].description.length && description.value.length != 0) {
-					if (local) saveGiftLocal(key[0], {name: name.value, description: description.value});
+					if (local) saveGiftLocal(key[0], {name: name.value, description: description.value}, false);
 					else onInputChange({name: name.value, description: description.value}, "dotes", key[0]);
 				}
 			});
@@ -446,6 +463,8 @@ function parseGifts(param) {
 			
 			parentDiv.addEventListener("focusout", (event) => {
 				if (!parentDiv.contains(event.relatedTarget)) {
+					descriptionInput.style.display = "none";
+					description.value = descriptionInput.value;
 					description.style.position = "absolute";
 					description.style.color =  "white";
 					description.style.display = "none";
@@ -461,18 +480,21 @@ function parseGifts(param) {
 		var masterDiv = createNewDiv([id, {name: "", description: ""}], true);
 		var emptyx = masterDiv.children[0];
 		var emptyy = masterDiv.children[1];
+		var emptyz = masterDiv.children[2];
+		
+		emptyz.style.display = "none";
 		
 		masterDiv.addEventListener("focusout", (event) => {
 			if (emptyx.value.length >0 && emptyy.value.length >0) {
-				if (local) saveGiftLocal(id, {name: emptyx.value, description: emptyy.value});
-				else saveGift(id, {name: emptyx.value, description: emptyy.value});
+				if (local) saveGiftLocal(id, {name: emptyx.value, description: emptyy.value}, true);
+				else saveGift(id, {name: emptyx.value, description: emptyy.value}, true);
 			}
 		});
 		
 		dotesDOM.appendChild(masterDiv);
 }
 
-function saveMagic(level, id, data) {
+function saveMagic(level, id, data, reload) {
     //handles input changes to store them in local storage
     // get already stored data
     TS.localStorage.campaign.getBlob().then((storedData) => {
@@ -488,11 +510,10 @@ function saveMagic(level, id, data) {
             clearStorageButton.classList.add("danger");
             clearStorageButton.disabled = false;
             clearStorageButton.textContent = "Clear Character Sheet";
-			//window.location.reload();
-			var elementDOM = document.getElementById(id);
-			elementDOM.remove();
-			loadStoredData();
-			initSheet();
+			if (reload) {
+				window.location.reload();
+			}
+
         }).catch((setBlobResponse) => {
             TS.debug.log("Failed to store change to local storage: " + setBlobResponse.cause);
             console.error("Failed to store change to local storage:", setBlobResponse);
@@ -504,7 +525,7 @@ function saveMagic(level, id, data) {
     });
 }
 
-function saveGift(id, data) {
+function saveGift(id, data, reload) {
     //handles input changes to store them in local storage
     // get already stored data
     TS.localStorage.campaign.getBlob().then((storedData) => {
@@ -521,11 +542,9 @@ function saveGift(id, data) {
             clearStorageButton.disabled = false;
             clearStorageButton.textContent = "Clear Character Sheet";
 			clearStorageButton = document.getElementById("clear-storage");
-			//window.location.reload();
-			var elementDOM = document.getElementById(id);
-			elementDOM.remove();
-			loadStoredData();
-			initSheet();
+			if (reload) {
+				window.location.reload();
+			}
         }).catch((setBlobResponse) => {
             TS.debug.log("Failed to store change to local storage: " + setBlobResponse.cause);
             console.error("Failed to store change to local storage:", setBlobResponse);
@@ -537,7 +556,7 @@ function saveGift(id, data) {
     });
 }
 
-function saveGiftLocal(id, data) {
+function saveGiftLocal(id, data, reload) {
 	var localData = localStorage.getItem("campaign");
 	var dataJson = JSON.parse(localData || "{}");
 	
@@ -548,14 +567,12 @@ function saveGiftLocal(id, data) {
 	clearStorageButton.disabled = false;
 	clearStorageButton.textContent = "Clear Character Sheet";
 	clearStorageButton = document.getElementById("clear-storage");
-	//window.location.reload();
-	var elementDOM = document.getElementById(id);
-	elementDOM.remove();
-	loadLocalData();
-	initSheet();
+	if (reload) {
+		window.location.reload();
+	}
 }
 
-function saveMagicLocal(level, id, data) {
+function saveMagicLocal(level, id, data, reload) {
     //handles input changes to store them in local storage
     // get already stored data
 	var localData = localStorage.getItem("campaign");
@@ -572,11 +589,9 @@ function saveMagicLocal(level, id, data) {
             clearStorageButton.disabled = false;
             clearStorageButton.textContent = "Clear Character Sheet";
 			clearStorageButton = document.getElementById("clear-storage");
-			//window.location.reload();
-			var elementDOM = document.getElementById(id);
-			elementDOM.remove();
-			loadLocalData();
-			initSheet();
+			if (reload) {
+				window.location.reload();
+			}
 }
 
 function removeMagicLocal(level, id) {
@@ -644,6 +659,7 @@ function createDiv(level, data, empty) {
 	div.id = data[0];
 	div.className = "content-row";
 	
+	var descriptionInput = createTextInput("Description here", data[1].description);
 	var description = createTextArea("Description here", data[1].description);
 	var name = createTextInput("Name here", data[1].name);
 	
@@ -663,13 +679,19 @@ function createDiv(level, data, empty) {
 	});
 	if (!empty) {
 		name.addEventListener("mousemove", (event) => {
-			description.style.display = "block";
-			description.style.left = `${event.pageX + 5}px`;
-			description.style.top = `${event.pageY + 5}px`;
+			if (!name.clicked) {
+				description.style.display = "block";
+				description.style.left = `${event.pageX + 5}px`;
+				description.style.top = `${event.pageY + 5}px`;
+			}
 		});
+		
+		description.value = descriptionInput.value;
+		descriptionInput.style.display = "none";
 	}
 	
 	div.appendChild(name);
+	div.appendChild(descriptionInput);
 	div.appendChild(description);
 	
 	return div;
@@ -679,6 +701,8 @@ function createNewDiv(data, empty) {
 	var div = document.createElement("div");
 	div.className = "content-row";
 	div.id = data[0];
+	
+	var descriptionInput = createTextInput("Description here", data[1].description);
 	var description = createTextArea("Description here", data[1].description);
 	var name = createTextInput("Name here", data[1].name);
 	
@@ -700,13 +724,19 @@ function createNewDiv(data, empty) {
 	});
 	if (!empty) {
 		name.addEventListener("mousemove", (event) => {
-			description.style.display = "block";
-			description.style.left = `${event.pageX + 5}px`;
-			description.style.top = `${event.pageY + 5}px`;
+			if (!name.clicked) {
+				description.style.display = "block";
+				description.style.left = `${event.pageX + 5}px`;
+				description.style.top = `${event.pageY + 5}px`;
+			}
 		});
+		
+		description.value = descriptionInput.value;
+		descriptionInput.style.display = "none";
 	}
 	
 	div.appendChild(name);
+	div.appendChild(descriptionInput);
 	div.appendChild(description);
 	
 	return div;
@@ -722,13 +752,13 @@ function createTextInput(placeHolder, value) {
 }
 
 function createTextArea(placeHolder, value) {
-	var input = document.createElement("input");
-	input.setAttribute("type", "text");
+	var input = document.createElement("textarea");
+	//input.setAttribute("type", "text");
 	input.value = value;
 	input.placeholder = placeHolder;
     input.maxLength = 500;
-    // input.cols = auto;
-    // input.rows = auto;
+    input.cols = "auto";
+    input.rows = "auto";
 	
 	return input;
 }
