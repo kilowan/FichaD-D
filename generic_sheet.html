@@ -1,0 +1,1064 @@
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>Character Sheet</title>
+      <link rel="stylesheet" href="generic_sheet.css" />
+      <script src="generic_sheet.js" defer></script>
+      <style>
+        .abilities-container {
+          display: flex;
+          gap: 20px;
+          flex-wrap: wrap;
+        }
+
+        .abilities-container.columns-2 {
+          flex-basis: 50%;
+        }
+
+        .abilities-container .content-row {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10px;
+        }
+
+        .abilities-container .field-title {
+          flex-basis: 60%;
+          margin-right: 40px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .abilities-container .field-data {
+          flex-basis: 60%;
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 150px;
+        }
+      </style>
+    </head>
+
+    <body>
+      <div class="container">
+        <div class="content-row">
+          <label class="field-title">PJ</label
+          ><input id="character-name" type="text" class="field-data" />
+          <p class="field-desc">Personaje</p>
+        </div>
+        <div class="content-row">
+          <label class="field-title">Clase</label
+          ><input id="clase" type="text" class="field-data" />
+          <p class="field-desc"></p>
+        </div>
+        <div class="content-row">
+          <label class="field-title">Nivel</label
+          ><input id="level" type="text" class="field-data" />
+          <p class="field-desc"></p>
+        </div>
+        <div class="content-row">
+          <label class="field-title">Raza</label
+          ><input id="raza" type="text" class="field-data" />
+          <p class="field-desc">Raza</p>
+        </div>
+        <div class="content-row">
+          <label class="field-title">Exp</label
+          ><input id="experiencia" type="text" class="field-data" />
+          <p class="field-desc">Experiencia</p>
+        </div>
+        <div class="content-row">
+          <label class="field-title">Rango</label
+          ><input id="aventurero" type="text" class="field-data" />
+          <p class="field-desc"></p>
+        </div>
+      </div>
+      <div class="container columns-3">
+        <div class="container">
+          <h1>Stat</h1>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-modifier="no-mod"
+              data-label="Strength"
+              >FUE</label
+            ><input id="str" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-modifier="no-mod"
+              data-label="Dexterity"
+              >DES</label
+            ><input id="dex" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-modifier="no-mod"
+              data-label="Constitution"
+              >CON</label
+            ><input id="con" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-modifier="no-mod"
+              data-label="Intelligence"
+              >INT</label
+            ><input id="int" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-modifier="no-mod"
+              data-label="Wisdom"
+              >SAB</label
+            ><input id="wis" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-modifier="no-mod"
+              data-label="Charisma"
+              >CAR</label
+            ><input id="cha" type="number" class="field-data-short" />
+          </div>
+        </div>
+        <div class="container">
+          <h1>Mod</h1>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Strength"
+              >FUE</label
+            ><input id="strm" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Dexterity"
+              >DEX</label
+            ><input id="dexm" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Constitution"
+              >CON</label
+            ><input id="conm" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Intelligence"
+              >INT</label
+            ><input id="intm" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title" data-dice-type="1d20" data-label="Wisdom"
+              >SAB</label
+            ><input id="wism" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Charisma"
+              >CAR</label
+            ><input id="cham" type="number" class="field-data-short" />
+          </div>
+        </div>
+        <div class="container">
+          <h1>Temporal</h1>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Save Strength"
+              >FUR</label
+            ><input id="save-strength" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Save Dexterity"
+              >DEX</label
+            ><input id="save-dex" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Save Constitution"
+              >CON</label
+            ><input
+              id="save-constitution"
+              type="number"
+              class="field-data-short"
+            />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Save Intelligence"
+              >INT</label
+            ><input
+              id="save-intelligence"
+              type="number"
+              class="field-data-short"
+            />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Save Wisdom"
+              >SAB</label
+            ><input id="save-wisdom" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Save Charisma"
+              >CAR</label
+            ><input id="save-charisma" type="number" class="field-data-short" />
+          </div>
+        </div>
+      </div>
+      <div class="abilities-container columns-2">
+        <div class="container">
+          <h1>Habilidades</h1>
+          <div class="content-row">
+            <input id="Acro" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Acrobatics"
+              >Acrobacias</label
+            ><input id="Acr" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="arte11" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="arte1"
+              ><input id="Artesania1" type="text" class="field-data" /></label
+            ><input id="Art1" type="number" class="field-data align input" />
+            <p class="field-desc">Artesania</p>
+          </div>
+          <div class="content-row">
+            <input id="arte22" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="arte2"
+              ><input id="Artesania2" type="text" class="field-data" /></label
+            ><input id="Art2" type="number" class="field-data align input" />
+            <p class="field-desc">Artesania</p>
+          </div>
+          <div class="content-row">
+            <input
+              id="AveIntt"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="AveInt"
+              >Averiguar Intenciones</label
+            ><input id="arc" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input
+              id="ConConjj"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="ConConj"
+              >*Conocimiento de Conjuros</label
+            ><input id="athlet" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Curr" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Cur"
+              >Curar</label
+            ><input id="decep" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Dipll" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Dipl"
+              >Diplomacia</label
+            ><input id="hist" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Disff" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Disff"
+              >Disfrazarse</label
+            ><input id="insight" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Engg" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Eng"
+              >Enganyar</label
+            ><input id="intim" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Escc" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Esc"
+              >Escapismo</label
+            ><input id="invest" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input
+              id="inter11"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="inter1"
+              ><input id="Interpretar1" type="text" class="field-data" /></label
+            ><input id="int1" type="number" class="field-data align input" />
+            <p class="field-desc">Interpretar</p>
+          </div>
+          <div class="content-row">
+            <input
+              id="inter22"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="inter2"
+              ><input id="Interpretar2" type="text" class="field-data" /></label
+            ><input id="int2" type="number" class="field-data align input" />
+            <p class="field-desc">Interpretar</p>
+          </div>
+          <div class="content-row">
+            <input id="Intt" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Intimi"
+              >Intimidar</label
+            ><input
+              id="intimidar"
+              type="number"
+              class="field-data align input"
+            />
+          </div>
+          <div class="content-row">
+            <input id="IntMec" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="IntMec"
+              >*Inutilizar Mecanismo</label
+            ><input
+              id="mecanismo"
+              type="number"
+              class="field-data align input"
+            />
+          </div>
+          <div class="content-row">
+            <input
+              id="Jugmann"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="JugMan"
+              >*Juego de manos</label
+            ><input id="manos" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Lengg" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Leng"
+              >*Lenguaje</label
+            ><input id="guaje" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Montt" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Mont"
+              >Montar</label
+            ><input id="ontar" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Nadd" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Nad"
+              >Nadar</label
+            ><input id="adar" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Percee" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Perce"
+              >Percepcion</label
+            ><input id="epcion" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="pro11" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="pro1"
+              ><input id="profesion1" type="text" class="field-data" /></label
+            ><input id="Prof1" type="number" class="field-data align input" />
+            <p class="field-desc">*Profesion</p>
+          </div>
+          <div class="content-row">
+            <input id="pro22" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="pro2"
+              ><input id="profesion2" type="text" class="field-data" /></label
+            ><input id="Prof2" type="number" class="field-data align input" />
+            <p class="field-desc">*Profesion</p>
+          </div>
+          <div class="content-row">
+            <input id="sarcc" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="sarc"
+              >*Saber Arcano</label
+            ><input id="arcans" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="sdung" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="sdung"
+              >*Saber Dungeon</label
+            ><input id="dunges" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="sgeoo" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="sgeo"
+              >*Saber Geografia</label
+            ><input id="geogra" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input
+              id="shistoo"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="shisto"
+              >*Saber Historia</label
+            ><input id="histo" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="singee" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="singe"
+              >*Saber Ingenieria</label
+            ><input id="ingenie" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="sloca" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="slocal"
+              >*Saber Local</label
+            ><input id="local" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="splano" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="splan"
+              >*Saber Los Planos</label
+            ><input id="planos" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="snatuu" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="snatu"
+              >*Saber Naturaleza</label
+            ><input id="natura" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="snoble" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="snobl"
+              >*Saber Nobleza</label
+            ><input id="noble" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="srelii" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="sreli"
+              >*Saber Religion</label
+            ><input id="reli" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="sigill" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="sigil"
+              >Sigilo</label
+            ><input id="sigilo" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="survii" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="survi"
+              >Supervivencia</label
+            ><input
+              id="supervive"
+              type="number"
+              class="field-data align input"
+            />
+          </div>
+          <div class="content-row">
+            <input id="tasaa" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="tasa"
+              >Tasacion</label
+            ><input id="tasac" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input
+              id="tratanii"
+              type="checkbox"
+              class="field-data-short"
+            /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="tratani"
+              >*Trato con Animales</label
+            ><input
+              id="aniamles"
+              type="number"
+              class="field-data align input"
+            />
+          </div>
+          <div class="content-row">
+            <input id="trepp" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="trep"
+              >Trepar</label
+            ><input id="trepar" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Objmag" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Obj-mag"
+              >*Usar Objeto Magico</label
+            ><input id="magico" type="number" class="field-data align input" />
+          </div>
+          <div class="content-row">
+            <input id="Flyy" type="checkbox" class="field-data-short" /><label
+              class="field-title"
+              data-dice-type="1d20"
+              data-label="Fly"
+              >Volar</label
+            ><input id="volar" type="number" class="field-data align input" />
+          </div>
+        </div>
+      </div>
+      <div class="content-row">
+        <label class="field-title">Rangos</label
+        ><input id="rango" type="number" class="field-data-short" />
+        <p class="field-desc">Rangos sin usar</p>
+      </div>
+      <div class="container columns-3" id="defensa"></div>
+      <div class="container columns-2">
+        <div class="content-row" style="width: 100%">
+          <h1>Combate</h1>
+        </div>
+        <div class="container">
+          <div class="content-row">
+            <button
+              id="atk01"
+              class="field-dado"
+              data-modifier="atk1"
+              data-dice-type="1d20"
+              data-label="Ataque1"
+            >
+              <i
+                class="ts-icon-d20 ts-icon-small"
+                style="margin-right: 0.2em"
+              ></i
+              >Ataque 1
+            </button>
+          </div>
+          <div class="content-row">
+            <button
+              id="atk02"
+              class="field-dado"
+              data-modifier="atk2"
+              data-dice-type="1d20"
+              data-label="Ataque2"
+            >
+              <i
+                class="ts-icon-d20 ts-icon-small"
+                style="margin-right: 0.2em"
+              ></i
+              >Ataque 2
+            </button>
+          </div>
+          <div class="content-row">
+            <button
+              id="atk03"
+              class="field-dado"
+              data-modifier="atk3"
+              data-dice-type="1d20"
+              data-label="Ataque3"
+            >
+              <i
+                class="ts-icon-d20 ts-icon-small"
+                style="margin-right: 0.2em"
+              ></i
+              >Ataque 3
+            </button>
+          </div>
+          <div class="content-row">
+            <button
+              id="atk04"
+              class="field-dado"
+              data-modifier="atk4"
+              data-dice-type="1d20"
+              data-label="Ataque4"
+            >
+              <i
+                class="ts-icon-d20 ts-icon-small"
+                style="margin-right: 0.2em"
+              ></i
+              >Ataque 4
+            </button>
+          </div>
+          <div class="content-row">
+            <button
+              id="atk05"
+              class="field-dado"
+              data-modifier="atk5"
+              data-dice-type="1d20"
+              data-label="Ataque5"
+            >
+              <i
+                class="ts-icon-d20 ts-icon-small"
+                style="margin-right: 0.2em"
+              ></i
+              >Ataque 5
+            </button>
+          </div>
+          <div class="content-row">
+            <button
+              id="atk06"
+              class="field-dado"
+              data-modifier="atk6"
+              data-dice-type="1d20"
+              data-label="Ataque6"
+            >
+              <i
+                class="ts-icon-d20 ts-icon-small"
+                style="margin-right: 0.2em"
+              ></i
+              >Ataque 6
+            </button>
+          </div>
+        </div>
+        <div class="container">
+          <div class="content-row">
+            <input id="atk1" type="number" class="field-data-short" /><label
+              class="field-title"
+              ><input id="espacio1" type="text" class="field-data"
+            /></label>
+          </div>
+          <div class="content-row">
+            <input id="atk2" type="number" class="field-data-short" /><label
+              class="field-title"
+              ><input id="espacio2" type="text" class="field-data"
+            /></label>
+          </div>
+          <div class="content-row">
+            <input id="atk3" type="number" class="field-data-short" /><label
+              class="field-title"
+              ><input id="espacio3" type="text" class="field-data"
+            /></label>
+          </div>
+          <div class="content-row">
+            <input id="atk4" type="number" class="field-data-short" /><label
+              class="field-title"
+              ><input id="espacio4" type="text" class="field-data"
+            /></label>
+          </div>
+          <div class="content-row">
+            <input id="atk5" type="number" class="field-data-short" /><label
+              class="field-title"
+              ><input id="espacio5" type="text" class="field-data"
+            /></label>
+          </div>
+          <div class="content-row">
+            <input id="atk6" type="number" class="field-data-short" /><label
+              class="field-title"
+              ><input id="espacio6" type="text" class="field-data"
+            /></label>
+          </div>
+        </div>  
+	  </div>
+        <div class="container columns-2">
+		  <div class="content-row">
+            <label class="field-title" data-dice-type="1d4" data-label="Blessed"
+              >Bless</label
+            ><input id="blessed" type="checkbox" class="field-data-short" />
+            <p class="field-desc">Bendecido</p>
+          </div>
+          <div class="content-row">
+            <label class="field-title" data-dice-type="1d6" data-label="Blessed"
+              >Inspirado</label
+            ><input id="inspire" type="checkbox" class="field-data-short" />
+            <p class="field-desc">Inspiracion de Bardo</p>
+          </div>
+		</div>
+      <div class="container">
+        <h1>Armas</h1>
+        <div class="content-row">
+          <textarea id="Weapon-text"></textarea>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Equipo</h1>
+        <div class="content-row">
+          <textarea id="Equipo-text"></textarea>
+        </div>
+      </div>
+      <div class="container columns-2">
+        <h1>Magia</h1>
+        <div class="container">
+          <h2>Conocida</h2>
+          <div class="content-row">
+            <label class="field-title">0</label
+            ><input id="nc0" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">1</label
+            ><input id="nc1" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">2</label
+            ><input id="nc2" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">3</label
+            ><input id="nc3" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">4</label
+            ><input id="nc4" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">5</label
+            ><input id="nc5" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">6</label
+            ><input id="nc6" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">7</label
+            ><input id="nc7" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">8</label
+            ><input id="nc8" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">9</label
+            ><input id="nc9" type="number" class="field-data-short" />
+          </div>
+        </div>
+        <div class="container">
+          <h2>Por dia</h2>
+          <div class="content-row">
+            <label class="field-title">0</label
+            ><input id="md0" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">1</label
+            ><input id="md1" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">2</label
+            ><input id="md2" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">3</label
+            ><input id="md3" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">4</label
+            ><input id="md4" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">5</label
+            ><input id="md5" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">6</label
+            ><input id="md6" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">7</label
+            ><input id="md7" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">8</label
+            ><input id="md8" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">9</label
+            ><input id="md9" type="number" class="field-data-short" />
+          </div>
+        </div>
+        <div class="container">
+          <h2>CD</h2>
+          <div class="content-row">
+            <label class="field-title">0</label
+            ><input id="cd0" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">1</label
+            ><input id="cd1" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">2</label
+            ><input id="cd2" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">3</label
+            ><input id="cd3" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">4</label
+            ><input id="cd4" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">5</label
+            ><input id="cd5" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">6</label
+            ><input id="cd6" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">7</label
+            ><input id="cd7" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">8</label
+            ><input id="cd8" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">9</label
+            ><input id="cd9" type="number" class="field-data-short" />
+          </div>
+        </div>
+      </div>
+      <div class="container columns-2">
+        <h1>Magia</h1>
+        <div class="container">
+          <h2>Nivel 0</h2>
+          <div class="content-row">
+            <textarea id="magia0-text"></textarea>
+          </div>
+          <h2>Nivel 1</h2>
+          <div class="content-row">
+            <textarea id="magia1-text"></textarea>
+          </div>
+          <h2>Nivel 2</h2>
+          <div class="content-row">
+            <textarea id="magia2-text"></textarea>
+          </div>
+          <h2>Nivel 3</h2>
+          <div class="content-row">
+            <textarea id="magia3-text"></textarea>
+          </div>
+          <h2>Nivel 4</h2>
+          <div class="content-row">
+            <textarea id="magia4-text"></textarea>
+          </div>
+        </div>
+        <div class="container">
+          <h2>Nivel 5</h2>
+          <div class="content-row">
+            <textarea id="magia5-text"></textarea>
+          </div>
+          <h2>Nivel 6</h2>
+          <div class="content-row">
+            <textarea id="magia6-text"></textarea>
+          </div>
+          <h2>Nivel 7</h2>
+          <div class="content-row">
+            <textarea id="magia7-text"></textarea>
+          </div>
+          <h2>Nivel 8</h2>
+          <div class="content-row">
+            <textarea id="magia8-text"></textarea>
+          </div>
+          <h2>Nivel 9</h2>
+          <div class="content-row">
+            <textarea id="maiga9-text"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="container columns-2" id="magias">
+        <h1>Magia</h1>
+        <div class="container">
+          <h2>Nivel 0</h2>
+          <div class="container" id="magia-0"></div>
+          <h2>Nivel 1</h2>
+		  <div class="container" id="magia-1"></div>
+          <h2>Nivel 2</h2>
+		  <div class="container" id="magia-2"></div>
+          <h2>Nivel 3</h2>
+		  <div class="container" id="magia-3"></div>
+          <h2>Nivel 4</h2>
+		  <div class="container" id="magia-4"></div>
+        </div>
+        <div class="container">
+          <h2>Nivel 5</h2>
+		  <div class="container" id="magia-5"></div>
+          <h2>Nivel 6</h2>
+		  <div class="container" id="magia-6"></div>
+          <h2>Nivel 7</h2>
+		  <div class="container" id="magia-7"></div>
+          <h2>Nivel 8</h2>
+		  <div class="container" id="magia-8"></div>
+          <h2>Nivel 9</h2>
+		  <div class="container" id="magia-9"></div>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Dotes</h1>
+        <div class="content-row">
+          <textarea id="dotes-text"></textarea>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Dotes</h1>
+        <div class="container" id="dotes" />
+      </div>
+      <div class="container">
+        <h1>Especiales</h1>
+        <div class="content-row">
+          <textarea id="feats-text"></textarea>
+        </div>
+      </div>
+      <div class="container columns-2">
+        <div class="container">
+          <h1>Movimiento</h1>
+          <div class="content-row">
+            <label class="field-title">Tierra</label
+            ><input id="move" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">Cansado</label
+            ><input id="move-cans" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">Nadar</label
+            ><input id="nadar" type="number" class="field-data-short" />
+          </div>
+          <div class="content-row">
+            <label class="field-title">Trepar</label
+            ><input id="trepar" type="number" class="field-data-short" />
+          </div>
+        </div>
+        <div class="container">
+          <h1>Dinero</h1>
+          <div class="content-row">
+            <label class="field-title">PC</label
+            ><input id="cp" type="number" class="field-data-short" />
+            <p class="field-desc">Monedas de Cobre</p>
+          </div>
+          <div class="content-row">
+            <label class="field-title">PP</label
+            ><input id="sp" type="number" class="field-data-short" />
+            <p class="field-desc">Monedas de Plata</p>
+          </div>
+          <div class="content-row">
+            <label class="field-title">PG</label
+            ><input id="gp" type="number" class="field-data-short" />
+            <p class="field-desc">Monedas de Oro</p>
+          </div>
+          <div class="content-row">
+            <label class="field-title">PPl</label
+            ><input id="gppl" type="number" class="field-data-short" />
+            <p class="field-desc">Monedas de Platino</p>
+          </div>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Inventario</h1>
+        <div class="content-row">
+          <textarea id="inventory-text"></textarea>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Habitacion</h1>
+        <div class="content-row">
+          <textarea id="habitacion-text"></textarea>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Languajes</h1>
+        <div class="content-row">
+          <textarea id="languages-text"></textarea>
+        </div>
+      </div>
+      <div class="container">
+        <h1>Notas</h1>
+        <div class="content-row">
+          <textarea id="notes-text"></textarea>
+        </div>
+      </div>
+      <div class="content-row" style="margin-bottom: 0">
+        <span style="flex-grow: 1"></span>
+        <button
+          id="clear-storage"
+          class=""
+          style="margin: 3em 0 0 0"
+          onclick="clearSheet()"
+          disabled
+          hidden
+        >
+          Character Sheet Empty
+        </button>
+      </div>
+    </body>
+  </html>
