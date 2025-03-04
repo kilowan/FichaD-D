@@ -4,11 +4,11 @@ var local = false;
 const li        = document.querySelectorAll('.li');
 const bloque    = document.querySelectorAll('.bloque');
 
-window.addEventListener("load", () => 
-{
-	local = true;
-	loadLocalData();
-});
+// window.addEventListener("load", () => 
+// {
+	// local = true;
+	// loadLocalData();
+// });
 
 li.forEach( ( cadaLi , i )=>{
     li[i].addEventListener('click',()=>{
@@ -361,23 +361,22 @@ function loadStoredData() {
 		TS.localStorage.campaign.setBlob(JSON.stringify(data));
 		
         let keyCount = 0;
-        for (let [key, value] of Object.entries(data)) {
-            keyCount++;
-            let element = document.getElementById(key);
-			element.value = value;
-            if (key == "thac0") {
-                element.dispatchEvent(new Event('change'));
-			} else if (element.type == "checkbox") {
-                element.checked = value == "on" ? true : false;
+		for (let [key, value] of Object.entries(data)) {
+			keyCount++;
+			let element = document.getElementById(key);
+			if (key == "thac0") {
+				element.dispatchEvent(new Event('change'));
 			} else if (key == "magias") {
 				parseMagic(value);
 			} else if (key == "dotes") {
 				parseGifts(value);
-            } else if (key == "abilities-text") {
-                let results = parseActions(element.value);
-                addActions(results);
-            }
-        }
+			} else if (element.type != undefined && element.type == "checkbox") {
+				element.checked = value == "on" ? true : false;
+			} else if (key == "abilities-text") {
+				let results = parseActions(element.value);
+				addActions(results);
+			} else element.value = value;
+		}
         //adding some log information to the symbiote log
         //this doesn't have particular importance, but is here to show how it's done
         TS.debug.log(`Loaded ${keyCount} values from storage`);
@@ -417,23 +416,18 @@ function loadLocalData() {
 	for (let [key, value] of Object.entries(data)) {
 		keyCount++;
 		let element = document.getElementById(key);
-		if (element == undefined) {
-			debugger;
-		} else {
-			element.value = value;
-			if (key == "thac0") {
-				element.dispatchEvent(new Event('change'));
-			} else if (key == "magias") {
-				parseMagic(value);
-			} else if (key == "dotes") {
-				parseGifts(value);
-			} else if (element.type != undefined && element.type == "checkbox") {
-				element.checked = value == "on" ? true : false;
-			} else if (key == "abilities-text") {
-				let results = parseActions(element.value);
-				addActions(results);
-			}
-		}
+		if (key == "thac0") {
+			element.dispatchEvent(new Event('change'));
+		} else if (key == "magias") {
+			parseMagic(value);
+		} else if (key == "dotes") {
+			parseGifts(value);
+		} else if (element.type != undefined && element.type == "checkbox") {
+			element.checked = value == "on" ? true : false;
+		} else if (key == "abilities-text") {
+			let results = parseActions(element.value);
+			addActions(results);
+		} else element.value = value;
 	}
 }
 
@@ -739,6 +733,276 @@ function createTextArea(placeHolder, value) {
 	};
 	
 	return input;
+}
+
+function buildCombatModule(atacks) {
+	let div = document.getElementById("combate");
+	//title
+	var titleDiv = document.createElement("div");
+	titleDiv.className = "content-row";
+	titleDiv.style="width: 100%";
+	
+	var title = document.createElement("h1");
+	var texto = document.createTextNode("Combate");
+	title.appendChild(texto);
+	titleDiv.appendChild(title);
+	div.appendChild(title);
+	
+	//column 1
+	var column1 = document.createElement("div");
+	column1.className = "container";
+	
+	//column 2
+	var column1 = document.createElement("div");
+	column1.className = "container";
+	
+	Object.entries(atacks).forEach((atack) => {
+		// "identifier":{
+			// "dice": "1d8", //dado daño
+			// "weapon": "example", //nombre arma
+			// "power": 8, //modificador tirada D20
+			// "mod": "str" // modificador daño
+			// "distance": "100'"
+		// }
+		var buttonsDiv = document.createElement("div");
+		buttonsDiv.className = "content-row";
+		
+		var button1 = document.createElement("button");
+		button1.type = 'button';
+		button1.className = "field-dado";
+		//button1.innerText = 'Haz Click';
+		buttonsDiv.body.appendChild(button1);
+		
+		var button2 = document.createElement("button");
+		button2.type = 'button'; 
+		button2.className = "field-dado";
+		//button2.innerText = 'Haz Click';
+		buttonsDiv.body.appendChild(button2);
+	});
+	
+// <div class="container">
+	// <div class="content-row">
+		// <button id="atk01" class="field-dado" data-modifier="atk1" data-dice-type="1d20" data-label="Ataque1"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 1</button>
+		// <button id="atk01-d" class="field-dado" data-modifier="atk1" data-dice-type="1d8 + 1d6" data-label="Ataque1"><i class="ts-icon-d8 ts-icon-small" style="margin-right: 0.2em;"></i>Da&ntilde;o 1</button>
+	// </div>
+	// <div class="content-row">
+		// <button id="atk02" class="field-dado" data-modifier="atk2" data-dice-type="1d20" data-label="Ataque2"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 2</button>
+		// <button id="atk02-d" class="field-dado" data-modifier="atk2" data-dice-type="1d4 + 1d6" data-label="Ataque2"><i class="ts-icon-d4 ts-icon-small" style="margin-right: 0.2em;"></i>Da&ntilde;o 2</button>
+	// </div>
+		// <div class="content-row">
+		// <button id="atk03" class="field-dado" data-modifier="atk3" data-dice-type="1d20" data-label="Ataque3"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 3</button>
+		// <button id="atk03-d" class="field-dado" data-modifier="atk3" data-dice-type="1d4 + 1d6" data-label="Ataque3"><i class="ts-icon-d4 ts-icon-small" style="margin-right: 0.2em;"></i>Da&ntilde;o 3</button>
+	// </div>
+		// <div class="content-row">
+		// <button id="atk04" class="field-dado" data-modifier="atk4" data-dice-type="1d20" data-label="Ataque4"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 4</button>
+	// </div>
+		// <div class="content-row">
+		// <button id="atk05" class="field-dado" data-modifier="atk5" data-dice-type="1d20" data-label="Ataque5"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 5</button>
+	// </div>
+		// <div class="content-row">
+		// <button id="atk06" class="field-dado" data-modifier="atk6" data-dice-type="1d20" data-label="Ataque6"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 6</button>
+	// </div>
+	// <div class="content-row">
+		// <label class="field-title" data-dice-type="1d4" data-label="Blessed">Bless</label><input id="blessed" type="checkbox" class="field-data-short"></input><p class="field-desc">Bendecido</p>
+	// </div>
+// </div>
+// <div class="container">
+	// <div class="content-row">
+		// <input id="atk1" type="number" class="field-data-short"></input>
+		// <label class="field-title"><input id="espacio1" type="text" class="field-data"></input></label>
+	// </div>
+	// <div class="content-row">
+		// <input id="atk2" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio2" type="text" class="field-data"></input></label>
+	// </div>
+	// <div class="content-row">
+		// <input id="atk3" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio3" type="text" class="field-data"></input></label>
+	// </div>
+	// <div class="content-row">
+		// <input id="atk4" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio4" type="text" class="field-data"></input></label>
+	// </div>
+	// <div class="content-row">
+		// <input id="atk5" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio5" type="text" class="field-data"></input></label>
+	// </div>
+	// <div class="content-row">
+		// <input id="atk6" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio6" type="text" class="field-data"></input></label>
+	// </div>
+		// <div class="content-row">
+		// <label class="field-title" data-dice-type="1d6" data-label="Blessed">Inspirado</label><input id="inspire" type="checkbox" class="field-data-short"></input><p class="field-desc">Inspiracion de Bardo</p>
+	// </div>
+// </div>
+
+}
+
+function buildDefenseModule() {
+	let div = document.getElementById("defensa");
+	//title
+	var title = document.createElement("h1");
+	title.className = "content-row";
+	title.style="width: 100%";
+	var texto = document.createTextNode("Defensa");
+	title.appendChild(texto);
+	div.appendChild(title);
+	
+	//Primera columna
+	var column1Data = [
+		{
+			name: "HP",
+			description: "Puntos de Vida",
+			id: "hp",
+			type: "number",
+			dice: undefined
+		},
+		{
+			name: "Iniciativa",
+			description: "Mod Dex",
+			id: "init",
+			type: "number",
+			dice: "1d20"
+		},
+		{
+			name: "Fortaleza",
+			description: "Mod Con + Base",
+			id: "Forta",
+			type: "number",
+			dice: "1d20"
+		},
+		{
+			name: "Reflejos",
+			description: "Mod Des + Base",
+			id: "refl",
+			type: "number",
+			dice: "1d20"
+		},
+		{
+			name: "Voluntad",
+			description: "Mod Sab + Base",
+			id: "vol",
+			type: "number",
+			dice: "1d20"
+		}
+	];
+	var column1 = buildColumn(column1Data);
+	div.appendChild(column1);
+	
+	//Segunda columna
+	var column2Data = [
+		{
+			name: "Max",
+			description: "Vida maxima",
+			id: "max-hp",
+			type: "number",
+			dice: undefined
+		},
+		{
+			name: "CA",
+			description: "Clase armadura",
+			id: "CA",
+			type: "number",
+			dice: undefined
+		},
+		{
+			name: "TOKE",
+			description: "CA Toque",
+			id: "catok",
+			type: "number",
+			dice: undefined
+		},
+		{
+			name: "DESPRE",
+			description: "CA Desprevenido",
+			id: "cadesp",
+			type: "number",
+			dice: undefined
+		},
+		{
+			name: "Ataque Base",
+			description: "Ataque Base",
+			id: "AB",
+			type: "number",
+			dice: undefined
+		}
+	];
+	var column2 = buildColumn(column2Data);
+	div.appendChild(column2);
+	//Tercera columna
+	var column3Data = [
+		{
+			name: "RD",
+			description: "Reduccion danyo",
+			id: "RD",
+			type: "number",
+			dice: undefined
+		},
+		{
+			name: "BMC",
+			description: "Maniobra de combate",
+			id: "bmc",
+			type: "number",
+			dice: "1d20"
+		},
+		{
+			name: "DMC",
+			description: "Defensa maniobra combate",
+			id: "DMC",
+			type: "number",
+			dice: undefined
+		}
+	];
+	var column3 = buildColumn(column3Data);
+	div.appendChild(column3);
+}
+
+function buildColumn(columnData) {
+	var column = document.createElement("div");
+	column.className = "container";
+	columnData.forEach((contentData) => {
+		var content = buildContent(contentData);
+		column.appendChild(content);
+	});
+	
+	return column;
+}
+
+function buildContent(contentData) {
+	var content = document.createElement("div");
+	content.className = "content-row";
+	//Description
+	var description = document.createElement("div");
+	description.style.display = "none";
+	description.style.position = "absolute";
+	description.style.color = "white";
+	var descriptionPTexto = document.createTextNode(contentData.description);
+	description.appendChild(descriptionPTexto);
+	//description.appendChild(descriptionP);
+	content.appendChild(description);
+	
+	//Name
+	var name = document.createElement("div");
+	name.className = "content-row";
+	var label = document.createElement("label");
+	label.className = "field-title";
+	var labelText = document.createTextNode(contentData.name);
+	label.appendChild(labelText);
+	var input = document.createElement("input");
+	input.className = "field-data-short";
+	input.setAttribute("value", "");
+	input.setAttribute("id", contentData.id);
+	input.setAttribute("type", contentData.type);
+	if (contentData.dice != undefined && contentData.dice != null) label.setAttribute("data-dice-type", contentData.dice);
+	name.appendChild(label);
+	name.appendChild(input);
+	content.appendChild(name);
+	content.addEventListener("mousemove", (event) => {
+		description.style.display = "block";
+		description.style.left = `${event.pageX + 5}px`;
+		description.style.top = `${event.pageY + 5}px`;
+	});
+	content.onmouseover = () => description.style.display = 'block';
+	content.onmouseout = () => {
+		description.style.display = "none";
+	};
+	
+	return content;
 }
 
 function clearSheet() {
