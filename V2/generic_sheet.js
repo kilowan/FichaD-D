@@ -370,6 +370,8 @@ function loadStoredData() {
 				parseMagic(value);
 			} else if (key == "dotes") {
 				parseGifts(value);
+			} else if (key == "ataques") {
+				buildCombatModule(value);
 			} else if (element.type != undefined && element.type == "checkbox") {
 				element.checked = value == "on" ? true : false;
 			} else if (key == "abilities-text") {
@@ -422,6 +424,8 @@ function loadLocalData() {
 			parseMagic(value);
 		} else if (key == "dotes") {
 			parseGifts(value);
+		} else if (key == "ataques") {
+			buildCombatModule(value);
 		} else if (element.type != undefined && element.type == "checkbox") {
 			element.checked = value == "on" ? true : false;
 		} else if (key == "abilities-text") {
@@ -746,7 +750,7 @@ function buildCombatModule(atacks) {
 	var texto = document.createTextNode("Combate");
 	title.appendChild(texto);
 	titleDiv.appendChild(title);
-	div.appendChild(title);
+	div.appendChild(titleDiv);
 	
 	//column 1
 	var column1 = document.createElement("div");
@@ -757,6 +761,7 @@ function buildCombatModule(atacks) {
 	column2.className = "container";
 	var number = 1;
 	Object.entries(atacks).forEach((atack) => {
+	// Object.entries(atks).forEach((atack) => {
 		// "identifier":{
 			// "dice": "d8", //dado daño
 			// "dice-qt": 1,
@@ -790,7 +795,7 @@ function buildCombatModule(atacks) {
 		button2.type = 'button'; 
 		button2.className = "field-dado";
 		button2.setAttribute("data-modifier", atack[0]);
-		var dice = `${atack[1].dice-qt}${atack[1].dice}`
+		var dice = `${atack[1]["dice-qt"]}${atack[1].dice}`
 		button2.setAttribute("data-dice-type", dice);
 		var label = `Ataque${number}`;
 		button2.setAttribute("data-label", label);
@@ -799,7 +804,9 @@ function buildCombatModule(atacks) {
 		i.className = `ts-icon-${id} ts-icon-small`;
 		i.setAttribute("style", "margin-right: 0.2em;");
 		button2.appendChild(i);
-		var textData = document.createTextNode(`Da&ntilde;o ${number}`);
+		//var value = "Da&ntilde;o";
+		var value = "Da\u00f1o"
+		var textData = document.createTextNode(`${value} ${number}`);
 		button2.appendChild(textData);
 		buttonsDiv.appendChild(button2);
 		column1.appendChild(buttonsDiv);
@@ -810,7 +817,7 @@ function buildCombatModule(atacks) {
 		
 		var inputValue = document.createElement("input");
 		inputValue.type = "number";
-		inputValue.setAttribute("value", atack[0].power);
+		inputValue.setAttribute("value", atack[1].power);
 		inputValue.className = "field-data-short";
 		
 		inputsDiv.appendChild(inputValue);
@@ -820,13 +827,18 @@ function buildCombatModule(atacks) {
 		
 		var input2 = document.createElement("input");
 		input2.type = "text";
-		input2.setAttribute("value", atack[0].weapon);
+		input2.setAttribute("value", atack[1].weapon);
 		input2.className = "field-data";
 		labelInput.appendChild(input2);
 		inputsDiv.appendChild(labelInput);
 		
+		column2.appendChild(inputsDiv);
+		
 		number++;
 	});
+	
+	div.appendChild(column1);
+	div.appendChild(column2);
 }
 
 function buildDefenseModule() {
