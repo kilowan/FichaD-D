@@ -753,84 +753,80 @@ function buildCombatModule(atacks) {
 	column1.className = "container";
 	
 	//column 2
-	var column1 = document.createElement("div");
-	column1.className = "container";
-	
+	var column2 = document.createElement("div");
+	column2.className = "container";
+	var number = 1;
 	Object.entries(atacks).forEach((atack) => {
 		// "identifier":{
-			// "dice": "1d8", //dado daño
+			// "dice": "d8", //dado daño
+			// "dice-qt": 1,
 			// "weapon": "example", //nombre arma
 			// "power": 8, //modificador tirada D20
 			// "mod": "str" // modificador daño
 			// "distance": "100'"
 		// }
+		
+		//fill column1
 		var buttonsDiv = document.createElement("div");
 		buttonsDiv.className = "content-row";
+		buttonsDiv.id = atack[0];
 		
 		var button1 = document.createElement("button");
 		button1.type = 'button';
 		button1.className = "field-dado";
-		//button1.innerText = 'Haz Click';
-		buttonsDiv.body.appendChild(button1);
+		button1.setAttribute("data-modifier", atack[0]);
+		button1.setAttribute("data-dice-type", "1d20");
+		var label = `Ataque${number}`;
+		button1.setAttribute("data-label", label);
+		var i0 = document.createElement("i");
+		i0.className = "ts-icon-d20 ts-icon-small";
+		i0.setAttribute("style", "margin-right: 0.2em;");
+		button1.appendChild(i0);
+		var textData0 = document.createTextNode(`Ataque ${number}`);
+		button1.appendChild(textData0);
+		buttonsDiv.appendChild(button1);
 		
 		var button2 = document.createElement("button");
 		button2.type = 'button'; 
 		button2.className = "field-dado";
-		//button2.innerText = 'Haz Click';
-		buttonsDiv.body.appendChild(button2);
+		button2.setAttribute("data-modifier", atack[0]);
+		var dice = `${atack[1].dice-qt}${atack[1].dice}`
+		button2.setAttribute("data-dice-type", dice);
+		var label = `Ataque${number}`;
+		button2.setAttribute("data-label", label);
+		var i = document.createElement("i");
+		var id = atack[1].dice;
+		i.className = `ts-icon-${id} ts-icon-small`;
+		i.setAttribute("style", "margin-right: 0.2em;");
+		button2.appendChild(i);
+		var textData = document.createTextNode(`Da&ntilde;o ${number}`);
+		button2.appendChild(textData);
+		buttonsDiv.appendChild(button2);
+		column1.appendChild(buttonsDiv);
+		
+		//fill column2
+		var inputsDiv = document.createElement("div");
+		inputsDiv.className = "content-row";
+		
+		var inputValue = document.createElement("input");
+		inputValue.type = "number";
+		inputValue.setAttribute("value", atack[0].power);
+		inputValue.className = "field-data-short";
+		
+		inputsDiv.appendChild(inputValue);
+		
+		var labelInput = document.createElement("label");
+		labelInput.className = "field-title";
+		
+		var input2 = document.createElement("input");
+		input2.type = "text";
+		input2.setAttribute("value", atack[0].weapon);
+		input2.className = "field-data";
+		labelInput.appendChild(input2);
+		inputsDiv.appendChild(labelInput);
+		
+		number++;
 	});
-	
-// <div class="container">
-	// <div class="content-row">
-		// <button id="atk01" class="field-dado" data-modifier="atk1" data-dice-type="1d20" data-label="Ataque1"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 1</button>
-		// <button id="atk01-d" class="field-dado" data-modifier="atk1" data-dice-type="1d8 + 1d6" data-label="Ataque1"><i class="ts-icon-d8 ts-icon-small" style="margin-right: 0.2em;"></i>Da&ntilde;o 1</button>
-	// </div>
-	// <div class="content-row">
-		// <button id="atk02" class="field-dado" data-modifier="atk2" data-dice-type="1d20" data-label="Ataque2"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 2</button>
-		// <button id="atk02-d" class="field-dado" data-modifier="atk2" data-dice-type="1d4 + 1d6" data-label="Ataque2"><i class="ts-icon-d4 ts-icon-small" style="margin-right: 0.2em;"></i>Da&ntilde;o 2</button>
-	// </div>
-		// <div class="content-row">
-		// <button id="atk03" class="field-dado" data-modifier="atk3" data-dice-type="1d20" data-label="Ataque3"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 3</button>
-		// <button id="atk03-d" class="field-dado" data-modifier="atk3" data-dice-type="1d4 + 1d6" data-label="Ataque3"><i class="ts-icon-d4 ts-icon-small" style="margin-right: 0.2em;"></i>Da&ntilde;o 3</button>
-	// </div>
-		// <div class="content-row">
-		// <button id="atk04" class="field-dado" data-modifier="atk4" data-dice-type="1d20" data-label="Ataque4"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 4</button>
-	// </div>
-		// <div class="content-row">
-		// <button id="atk05" class="field-dado" data-modifier="atk5" data-dice-type="1d20" data-label="Ataque5"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 5</button>
-	// </div>
-		// <div class="content-row">
-		// <button id="atk06" class="field-dado" data-modifier="atk6" data-dice-type="1d20" data-label="Ataque6"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 6</button>
-	// </div>
-	// <div class="content-row">
-		// <label class="field-title" data-dice-type="1d4" data-label="Blessed">Bless</label><input id="blessed" type="checkbox" class="field-data-short"></input><p class="field-desc">Bendecido</p>
-	// </div>
-// </div>
-// <div class="container">
-	// <div class="content-row">
-		// <input id="atk1" type="number" class="field-data-short"></input>
-		// <label class="field-title"><input id="espacio1" type="text" class="field-data"></input></label>
-	// </div>
-	// <div class="content-row">
-		// <input id="atk2" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio2" type="text" class="field-data"></input></label>
-	// </div>
-	// <div class="content-row">
-		// <input id="atk3" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio3" type="text" class="field-data"></input></label>
-	// </div>
-	// <div class="content-row">
-		// <input id="atk4" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio4" type="text" class="field-data"></input></label>
-	// </div>
-	// <div class="content-row">
-		// <input id="atk5" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio5" type="text" class="field-data"></input></label>
-	// </div>
-	// <div class="content-row">
-		// <input id="atk6" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio6" type="text" class="field-data"></input></label>
-	// </div>
-		// <div class="content-row">
-		// <label class="field-title" data-dice-type="1d6" data-label="Blessed">Inspirado</label><input id="inspire" type="checkbox" class="field-data-short"></input><p class="field-desc">Inspiracion de Bardo</p>
-	// </div>
-// </div>
-
 }
 
 function buildDefenseModule() {
