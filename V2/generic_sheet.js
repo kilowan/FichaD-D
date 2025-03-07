@@ -4,24 +4,29 @@ var local = false;
 const li        = document.querySelectorAll('.li');
 const bloque    = document.querySelectorAll('.bloque');
 
-const blessed = document.getElementById("blessed");
-blessed.addEventListener("change", (event) => {
-	if (event.target.checked) {
-		var dados = document.querySelectorAll(".field-dado");
-		dados.forEach((dado) => {
-			var attr = dado.getAttribute("data-dice-type");
-			var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
-			dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
-		});
-	} else {
-		var dados = document.querySelectorAll(".field-dado");
-		dados.forEach((dado) => {
-			var attr = dado.getAttribute("data-dice-type");
-			var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
-			var split = attr.split(" + ")[0];
-			dado.setAttribute("data-dice-type", split);
-		});
-	}
+const blesseds = document.querySelectorAll(".buff");
+
+blesseds.forEach((blessed) => {
+	blessed.addEventListener("change", (event) => {
+		if (event.target.checked) {
+			var dados = document.querySelectorAll(".field-dado");
+			dados.forEach((dado) => {
+				var attr = dado.getAttribute("data-dice-type");
+				var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+				dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
+			});
+		} else {
+			var dados = document.querySelectorAll(".field-dado");
+			dados.forEach((dado) => {
+				var attr = dado.getAttribute("data-dice-type");
+				var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+				
+				let textToDelete = ` + ${modifier}`;
+				attr = attr.replace(textToDelete, "");
+				dado.setAttribute("data-dice-type", attr);
+			});
+		}
+	});
 });
 
 // window.addEventListener("load", () => 
@@ -458,6 +463,9 @@ function loadLocalData() {
 	for (let [key, value] of Object.entries(data)) {
 		keyCount++;
 		let element = document.getElementById(key);
+		if(element == null) {
+			debugger;
+		}
 		if (key == "thac0") {
 			element.dispatchEvent(new Event('change'));
 		} else if (key == "magias") {
