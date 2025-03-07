@@ -4,11 +4,73 @@ var local = false;
 const li        = document.querySelectorAll('.li');
 const bloque    = document.querySelectorAll('.bloque');
 
-// window.addEventListener("load", () => 
-// {
-	// local = true;
-	// loadLocalData();
-// });
+const blessed = document.getElementById("blessed");
+blessed.addEventListener("change", (event) => {
+	if (event.target.checked) {
+		var dados = document.querySelectorAll(".field-dado");
+		dados.forEach((dado) => {
+			var attr = dado.getAttribute("data-dice-type");
+			var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+			dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
+		});
+	} else {
+		var dados = document.querySelectorAll(".field-dado");
+		dados.forEach((dado) => {
+			var attr = dado.getAttribute("data-dice-type");
+			var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+			var split = attr.split(" + ")[0];
+			dado.setAttribute("data-dice-type", split);
+		});
+	}
+});
+
+window.addEventListener("load", () => 
+{
+	local = true;
+	// buildCombatModule();
+	// var container = document.getElementById("container");
+	// var pruebas2 = document.getElementById("element");
+	// var element2 = document.createElement("div");
+	// element2.className = "content-row";
+	// element2.innerHTML = pruebas2.innerHTML;
+	// element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
+	// element2.childNodes[1].setAttribute("data-modifier", "atk7");
+	// element2.childNodes[1].setAttribute("data-dice-type", "15d20");
+	// element2.childNodes[1].setAttribute("data-label", "Ataque7");
+	// element2.childNodes[1].setAttribute("id", "atk07");
+	// var blessed = document.getElementById("blessed");
+	// container.appendChild(element2);
+	
+	// var container2 = document.getElementById("container2");
+	// var pruebas1 = document.getElementById("element2");
+	// var element1 = document.createElement("div");
+	// element1.innerHTML = pruebas1.innerHTML;
+	// element1.childNodes[1].setAttribute("id", "atk7");
+	// container2.appendChild(element1);
+	loadLocalData();
+});
+
+window.addEventListener("DOMContentLoaded", () => 
+{
+	// var container = document.getElementById("container");
+	// var pruebas2 = document.getElementById("element");
+	// var element2 = document.createElement("div");
+	// element2.className = "content-row";
+	// element2.innerHTML = pruebas2.innerHTML;
+	// element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
+	// element2.childNodes[1].setAttribute("data-modifier", "atk7");
+	// //element2.childNodes[1].setAttribute("data-dice-type", "15d20");
+	// element2.childNodes[1].setAttribute("data-label", "Ataque7");
+	// element2.childNodes[1].setAttribute("id", "atk07");
+	// container.appendChild(element2);
+	
+	// var container2 = document.getElementById("container2");
+	// var pruebas1 = document.getElementById("element2");
+	// var element1 = document.createElement("div");
+	// element1.innerHTML = pruebas1.innerHTML;
+	// element1.childNodes[1].setAttribute("id", "atk7");
+	// container2.appendChild(element1);
+});
 
 li.forEach( ( cadaLi , i )=>{
     li[i].addEventListener('click',()=>{
@@ -334,7 +396,7 @@ function saveMagicLocal(level, id, data, reload) {
 }
 
 function loadStoredData() {
-    TS.localStorage.campaign.getBlob().then((storedData) => {
+	TS.localStorage.campaign.getBlob().then((storedData) => {
         //localstorage blobs are just unstructured text.
         //this means we can store whatever we like, but we also need to parse it to use it.
 		clearStorageButton = document.getElementById("clear-storage");
@@ -370,8 +432,6 @@ function loadStoredData() {
 				parseMagic(value);
 			} else if (key == "dotes") {
 				parseGifts(value);
-			} else if (key == "ataques") {
-				buildCombatModule(value);
 			} else if (element.type != undefined && element.type == "checkbox") {
 				element.checked = value == "on" ? true : false;
 			} else if (key == "abilities-text") {
@@ -424,9 +484,7 @@ function loadLocalData() {
 			parseMagic(value);
 		} else if (key == "dotes") {
 			parseGifts(value);
-		} else if (key == "ataques") {
-			buildCombatModule(value);
-		} else if (element.type != undefined && element.type == "checkbox") {
+		 } else if (element.type != undefined && element.type == "checkbox") {
 			element.checked = value == "on" ? true : false;
 		} else if (key == "abilities-text") {
 			let results = parseActions(element.value);
@@ -740,105 +798,151 @@ function createTextArea(placeHolder, value) {
 }
 
 function buildCombatModule(atacks) {
-	let div = document.getElementById("combate");
-	//title
-	var titleDiv = document.createElement("div");
-	titleDiv.className = "content-row";
-	titleDiv.style="width: 100%";
 	
-	var title = document.createElement("h1");
-	var texto = document.createTextNode("Combate");
-	title.appendChild(texto);
-	titleDiv.appendChild(title);
-	div.appendChild(titleDiv);
+	// var ataques = {
+        // "104dcb00-08f2-4aeb-9008-27c5baff35c4": {
+            // dice: "1d8",
+            // diceLabel: "d8",
+            // weapon: "Arco Largo",
+            // power: 7,
+            // mod: "str",
+            // distance: "100'"
+        // },
+        // "31731c26-7f0a-4319-83d1-f3605e1d44eb": {
+            // dice: "1d4",
+            // diceLabel: "d4",
+            // weapon: "Daga",
+            // power: 7,
+            // mod: "str",
+            // distance: "10'"
+        // },
+        // "eadc9146-6e11-4992-bd6d-a05af96de625": {
+            // dice: "1d4",
+            // diceLabel: "d4",
+            // weapon: "Laud Azul",
+            // power: 4,
+            // mod: "str",
+            // distance: null
+        // },
+        // "7eebd0d0-903e-48f5-8360-b65a2b6ae81f": {
+            // dice: "1d4 + 3",
+            // diceLabel: "d4",
+            // weapon: "Arco largo mejorado",
+            // power: 7,
+            // mod: "str",
+            // distance: "100'"
+        // }
+    // };
+	var pruebas2 = document.getElementById("pruebas2");
+	//pruebas2.innerHTML = "<button id=\"atk04\" class=\"field-dado\" data-modifier=\"atk4\" data-dice-type=\"1d20\" data-label=\"Ataque4\"><i class=\"ts-icon-d20 ts-icon-small\" style=\"margin-right: 0.2em;\"></i>Ataque 4</button>";
+	//pruebas2.innerHTML = '\n\t\t\t\t\t\t\x3C!-- <input id="atk4" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio4" type="text" class="field-data"></input></label> -->\n\t\t\t\t\t<input id="atk4" type="number" class="field-data-short"><label class="field-title"><input id="espacio4" type="text" class="field-data"></label>'
+	var button1 = document.createElement("button");
+	button1.className = "field-dado";
+	// button1.setAttribute("data-modifier", "atk4");
+	//button1.setAttribute("data-dice-type", "1d20");
+	button1["data-dice-type"] = "1d20";
+	// button1.setAttribute("data-label", "Ataque4");
+	// var i0 = document.createElement("i");
+	// i0.className = "ts-icon-d20 ts-icon-small";
+	// i0.setAttribute("style", "margin-right: 0.2em;");
+	// button1.appendChild(i0);
+	var textData0 = document.createTextNode("Ataque 7");
+	button1.appendChild(textData0);
+	pruebas2.appendChild(button1);
+	// var x = document.getElementById("combate1");
+	// var y = document.getElementById("combate2");
+	// var pruebas = document.getElementById("pruebas");
+	// var input = document.createElement("input");
+	// //input.id = "atk4";
+	// input.type = "number";
+	// input.className = "field-data-short";
+	// pruebas.appendChild(input);
 	
-	//column 1
-	var column1 = document.createElement("div");
-	column1.className = "container";
+	// var labelInput = document.createElement("label");
+	// labelInput.className = "field-title";
 	
-	//column 2
-	var column2 = document.createElement("div");
-	column2.className = "container";
-	var number = 1;
-	Object.entries(atacks).forEach((atack) => {
-	// Object.entries(atks).forEach((atack) => {
-		// "identifier":{
-			// "dice": "d8", //dado daño
-			// "dice-qt": 1,
-			// "weapon": "example", //nombre arma
-			// "power": 8, //modificador tirada D20
-			// "mod": "str" // modificador daño
-			// "distance": "100'"
-		// }
-		
-		//fill column1
-		var buttonsDiv = document.createElement("div");
-		buttonsDiv.className = "content-row";
-		buttonsDiv.id = atack[0];
-		
-		var button1 = document.createElement("button");
-		button1.type = 'button';
-		button1.className = "field-dado";
-		button1.setAttribute("data-modifier", atack[0]);
-		button1.setAttribute("data-dice-type", "1d20");
-		var label = `Ataque${number}`;
-		button1.setAttribute("data-label", label);
-		var i0 = document.createElement("i");
-		i0.className = "ts-icon-d20 ts-icon-small";
-		i0.setAttribute("style", "margin-right: 0.2em;");
-		button1.appendChild(i0);
-		var textData0 = document.createTextNode(`Ataque ${number}`);
-		button1.appendChild(textData0);
-		buttonsDiv.appendChild(button1);
-		
-		var button2 = document.createElement("button");
-		button2.type = 'button'; 
-		button2.className = "field-dado";
-		button2.setAttribute("data-modifier", atack[0]);
-		var dice = `${atack[1]["dice-qt"]}${atack[1].dice}`
-		button2.setAttribute("data-dice-type", dice);
-		var label = `Ataque${number}`;
-		button2.setAttribute("data-label", label);
-		var i = document.createElement("i");
-		var id = atack[1].dice;
-		i.className = `ts-icon-${id} ts-icon-small`;
-		i.setAttribute("style", "margin-right: 0.2em;");
-		button2.appendChild(i);
-		//var value = "Da&ntilde;o";
-		var value = "Da\u00f1o"
-		var textData = document.createTextNode(`${value} ${number}`);
-		button2.appendChild(textData);
-		buttonsDiv.appendChild(button2);
-		column1.appendChild(buttonsDiv);
-		
-		//fill column2
-		var inputsDiv = document.createElement("div");
-		inputsDiv.className = "content-row";
-		
-		var inputValue = document.createElement("input");
-		inputValue.type = "number";
-		inputValue.setAttribute("value", atack[1].power);
-		inputValue.className = "field-data-short";
-		
-		inputsDiv.appendChild(inputValue);
-		
-		var labelInput = document.createElement("label");
-		labelInput.className = "field-title";
-		
-		var input2 = document.createElement("input");
-		input2.type = "text";
-		input2.setAttribute("value", atack[1].weapon);
-		input2.className = "field-data";
-		labelInput.appendChild(input2);
-		inputsDiv.appendChild(labelInput);
-		
-		column2.appendChild(inputsDiv);
-		
-		number++;
-	});
+	// var input2 = document.createElement("input");
+	// input2.id = "espacio4";
+	// input2.type = "text";
+	// input2.className = "field-data";
+	// labelInput.appendChild(input2);
+	// //pruebas.appendChild(labelInput);
 	
-	div.appendChild(column1);
-	div.appendChild(column2);
+	
+	// var number = 1;
+	// Object.entries(atacks).forEach((atack) => {
+	// //Object.entries(ataques).forEach((atack) => {
+		// // "identifier":{
+			// // "dice": "d8", //dado daño
+			// // "dice-qt": 1,
+			// // "weapon": "example", //nombre arma
+			// // "power": 8, //modificador tirada D20
+			// // "mod": "str" // modificador daño
+			// // "distance": "100'"
+		// // }
+		
+		// //fill column1
+		// var buttonsDiv = document.createElement("div");
+		// buttonsDiv.className = "content-row";
+		
+		// var button1 = document.createElement("button");
+		// button1.className = "field-dado";
+		// button1.setAttribute("data-modifier", atack[0]);
+		// // button1.setAttribute("data-dice-type", "1d20");
+		// button1.setAttribute('data-dice-type', '1d20');
+		// // var label = `Ataque${number}`;
+		// // button1.setAttribute("data-label", label);
+		// var i0 = document.createElement("i");
+		// i0.className = "ts-icon-d20 ts-icon-small";
+		// i0.setAttribute("style", "margin-right: 0.2em;");
+		// button1.appendChild(i0);
+		// // var textData0 = document.createTextNode(`Ataque ${number}`);
+		// // button1.appendChild(textData0);
+		// buttonsDiv.appendChild(button1);
+		
+		// var button2 = document.createElement("button");
+		// button2.className = "field-dado";
+		// button2.setAttribute("data-modifier", atack[0]);
+		// button2.setAttribute("data-dice-type", atack[1].dice);
+		// // var label = `Ataque${number}`;
+		// // button2.setAttribute("data-label", label);
+		// var i = document.createElement("i");
+		// i.className = `ts-icon-${atack[1].diceLabel} ts-icon-small`;
+		// i.setAttribute("style", "margin-right: 0.2em;");
+		// button2.appendChild(i);
+		// //var value = "Da&ntilde;o";
+		// var value = "Da\u00f1o"
+		// // var textData = document.createTextNode(`${value} ${number}`);
+		// // button2.appendChild(textData);
+		// buttonsDiv.appendChild(button2);
+		// x.appendChild(buttonsDiv);
+		
+		// //fill column2
+		// var inputsDiv = document.createElement("div");
+		// inputsDiv.className = "content-row";
+		
+		// var inputValue = document.createElement("input");
+		// inputValue.type = "number";
+		// inputValue.id = atack[0];
+		// inputValue.setAttribute("value", atack[1].power);
+		// inputValue.className = "field-data-short";
+		
+		// inputsDiv.appendChild(inputValue);
+		
+		// var labelInput = document.createElement("label");
+		// labelInput.className = "field-title";
+		
+		// var input2 = document.createElement("input");
+		// input2.type = "text";
+		// input2.setAttribute("value", atack[1].weapon);
+		// input2.className = "field-data";
+		// labelInput.appendChild(input2);
+		// inputsDiv.appendChild(labelInput);
+		
+		// y.appendChild(inputsDiv);
+		
+		// // number++;
+	// });
 }
 
 function buildDefenseModule() {
