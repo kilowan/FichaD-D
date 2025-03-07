@@ -24,53 +24,33 @@ blessed.addEventListener("change", (event) => {
 	}
 });
 
-window.addEventListener("load", () => 
-{
-	local = true;
-	// buildCombatModule();
-	// var container = document.getElementById("container");
-	// var pruebas2 = document.getElementById("element");
-	// var element2 = document.createElement("div");
-	// element2.className = "content-row";
-	// element2.innerHTML = pruebas2.innerHTML;
-	// element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
-	// element2.childNodes[1].setAttribute("data-modifier", "atk7");
-	// element2.childNodes[1].setAttribute("data-dice-type", "15d20");
-	// element2.childNodes[1].setAttribute("data-label", "Ataque7");
-	// element2.childNodes[1].setAttribute("id", "atk07");
-	// var blessed = document.getElementById("blessed");
-	// container.appendChild(element2);
-	
-	// var container2 = document.getElementById("container2");
-	// var pruebas1 = document.getElementById("element2");
-	// var element1 = document.createElement("div");
-	// element1.innerHTML = pruebas1.innerHTML;
-	// element1.childNodes[1].setAttribute("id", "atk7");
-	// container2.appendChild(element1);
-	loadLocalData();
-});
+// window.addEventListener("load", () => 
+// {
+	// local = true;
+	// loadLocalData();
+// });
 
-window.addEventListener("DOMContentLoaded", () => 
-{
-	// var container = document.getElementById("container");
-	// var pruebas2 = document.getElementById("element");
-	// var element2 = document.createElement("div");
-	// element2.className = "content-row";
-	// element2.innerHTML = pruebas2.innerHTML;
-	// element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
-	// element2.childNodes[1].setAttribute("data-modifier", "atk7");
-	// //element2.childNodes[1].setAttribute("data-dice-type", "15d20");
-	// element2.childNodes[1].setAttribute("data-label", "Ataque7");
-	// element2.childNodes[1].setAttribute("id", "atk07");
-	// container.appendChild(element2);
+// window.addEventListener("DOMContentLoaded", () => 
+// {
+	// // var container = document.getElementById("container");
+	// // var pruebas2 = document.getElementById("element");
+	// // var element2 = document.createElement("div");
+	// // element2.className = "content-row";
+	// // element2.innerHTML = pruebas2.innerHTML;
+	// // element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
+	// // element2.childNodes[1].setAttribute("data-modifier", "atk7");
+	// // //element2.childNodes[1].setAttribute("data-dice-type", "15d20");
+	// // element2.childNodes[1].setAttribute("data-label", "Ataque7");
+	// // element2.childNodes[1].setAttribute("id", "atk07");
+	// // container.appendChild(element2);
 	
-	// var container2 = document.getElementById("container2");
-	// var pruebas1 = document.getElementById("element2");
-	// var element1 = document.createElement("div");
-	// element1.innerHTML = pruebas1.innerHTML;
-	// element1.childNodes[1].setAttribute("id", "atk7");
-	// container2.appendChild(element1);
-});
+	// // var container2 = document.getElementById("container2");
+	// // var pruebas1 = document.getElementById("element2");
+	// // var element1 = document.createElement("div");
+	// // element1.innerHTML = pruebas1.innerHTML;
+	// // element1.childNodes[1].setAttribute("id", "atk7");
+	// // container2.appendChild(element1);
+// });
 
 li.forEach( ( cadaLi , i )=>{
     li[i].addEventListener('click',()=>{
