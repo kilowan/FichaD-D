@@ -6,6 +6,8 @@ const bloque    = document.querySelectorAll('.bloque');
 
 const blesseds = document.querySelectorAll(".buff");
 
+
+
 blesseds.forEach((blessed) => {
 	blessed.addEventListener("change", (event) => {
 		if (event.target.checked) {
@@ -29,33 +31,70 @@ blesseds.forEach((blessed) => {
 	});
 });
 
+
+//Local
 // window.addEventListener("load", () => 
 // {
 	// local = true;
 	// loadLocalData();
+	// const selectors = document.querySelectorAll(".select");
+	// selectors.forEach((selector) => {
+		// var id = selector.getAttribute("name");
+		// var idmod = `${id}mod`;
+		// var idSum = `${id}sum`;
+		// var parameter = document.getElementById(id);
+		// selector.addEventListener("change", (event) => {
+			// var init = parseInt(parameter.value);
+			// var modId = event.target[event.target.selectedIndex].getAttribute("value");
+			// var modifier = parseInt(document.getElementById(modId).value);
+			// var modified = init + modifier;
+			// var sum = document.getElementById(idSum);
+			// var mod = document.getElementById(idmod);
+			// mod.value = modifier;
+			// sum.value = modified;
+		// });
+	// });
 // });
 
-// window.addEventListener("DOMContentLoaded", () => 
-// {
-	// // var container = document.getElementById("container");
-	// // var pruebas2 = document.getElementById("element");
-	// // var element2 = document.createElement("div");
-	// // element2.className = "content-row";
-	// // element2.innerHTML = pruebas2.innerHTML;
-	// // element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
-	// // element2.childNodes[1].setAttribute("data-modifier", "atk7");
-	// // //element2.childNodes[1].setAttribute("data-dice-type", "15d20");
-	// // element2.childNodes[1].setAttribute("data-label", "Ataque7");
-	// // element2.childNodes[1].setAttribute("id", "atk07");
-	// // container.appendChild(element2);
+//Talespire
+window.addEventListener("load", () => 
+{
+	// var container = document.getElementById("container");
+	// var pruebas2 = document.getElementById("element");
+	// var element2 = document.createElement("div");
+	// element2.className = "content-row";
+	// element2.innerHTML = pruebas2.innerHTML;
+	// element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
+	// element2.childNodes[1].setAttribute("data-modifier", "atk7");
+	// //element2.childNodes[1].setAttribute("data-dice-type", "15d20");
+	// element2.childNodes[1].setAttribute("data-label", "Ataque7");
+	// element2.childNodes[1].setAttribute("id", "atk07");
+	// container.appendChild(element2);
 	
-	// // var container2 = document.getElementById("container2");
-	// // var pruebas1 = document.getElementById("element2");
-	// // var element1 = document.createElement("div");
-	// // element1.innerHTML = pruebas1.innerHTML;
-	// // element1.childNodes[1].setAttribute("id", "atk7");
-	// // container2.appendChild(element1);
-// });
+	// var container2 = document.getElementById("container2");
+	// var pruebas1 = document.getElementById("element2");
+	// var element1 = document.createElement("div");
+	// element1.innerHTML = pruebas1.innerHTML;
+	// element1.childNodes[1].setAttribute("id", "atk7");
+	// container2.appendChild(element1);
+	const selectors = document.querySelectorAll(".select");
+	selectors.forEach((selector) => {
+		var id = selector.getAttribute("name");
+		var idmod = `${id}mod`;
+		var idSum = `${id}sum`;
+		var parameter = document.getElementById(id);
+		selector.addEventListener("change", (event) => {
+			var init = parseInt(parameter.value);
+			var modId = event.target[event.target.selectedIndex].getAttribute("value");
+			var modifier = parseInt(document.getElementById(modId).value);
+			var modified = init + modifier;
+			var sum = document.getElementById(idSum);
+			var mod = document.getElementById(idmod);
+			mod.value = modifier;
+			sum.value = modified;
+		});
+	});
+});
 
 li.forEach( ( cadaLi , i )=>{
     li[i].addEventListener('click',()=>{
@@ -417,6 +456,19 @@ function loadStoredData() {
 				parseMagic(value);
 			} else if (key == "dotes") {
 				parseGifts(value);
+			} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
+				var idsum = `${element.id}sum`;
+				var sum = document.getElementById(idsum);
+				sum.value = value;
+				var id = document.getElementById(element.id);
+				id.value = value;
+				id.addEventListener("change", (event) => {
+					var id = document.getElementById(event.target.id);
+					var mod = document.getElementById(`${event.target.id}mod`);
+					var sum = document.getElementById(`${event.target.id}sum`);
+					var modified = parseInt(id.value) + parseInt(mod.value);
+					sum.value = modified;
+				});
 			} else if (element.type != undefined && element.type == "checkbox") {
 				element.checked = value == "on" ? true : false;
 			} else if (key == "abilities-text") {
@@ -463,16 +515,26 @@ function loadLocalData() {
 	for (let [key, value] of Object.entries(data)) {
 		keyCount++;
 		let element = document.getElementById(key);
-		if(element == null) {
-			debugger;
-		}
 		if (key == "thac0") {
 			element.dispatchEvent(new Event('change'));
 		} else if (key == "magias") {
 			parseMagic(value);
 		} else if (key == "dotes") {
 			parseGifts(value);
-		 } else if (element.type != undefined && element.type == "checkbox") {
+		} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
+			var idsum = `${element.id}sum`;
+			var sum = document.getElementById(idsum);
+			sum.value = value;
+			var id = document.getElementById(element.id);
+			id.value = value;
+			id.addEventListener("change", (event) => {
+				var id = document.getElementById(event.target.id);
+				var mod = document.getElementById(`${event.target.id}mod`);
+				var sum = document.getElementById(`${event.target.id}sum`);
+				var modified = parseInt(id.value) + parseInt(mod.value);
+				sum.value = modified;
+			});
+		} else if (element.type != undefined && element.type == "checkbox") {
 			element.checked = value == "on" ? true : false;
 		} else if (key == "abilities-text") {
 			let results = parseActions(element.value);

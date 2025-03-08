@@ -287,22 +287,22 @@
 				</div>
 				<div class="container">
 					<div class="content-row">
-						<button id="atk01" class="field-dado" data-modifier="atk1" data-dice-type="1d20" data-label="Ataque1"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 1</button>
+						<button id="atk01" class="field-dado" data-modifier="atk1sum" data-dice-type="1d20" data-label="Ataque1"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 1</button>
 					</div>
 					<div class="content-row">
-						<button id="atk02" class="field-dado" data-modifier="atk2" data-dice-type="1d20" data-label="Ataque2"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 2</button>
+						<button id="atk02" class="field-dado" data-modifier="atk2sum" data-dice-type="1d20" data-label="Ataque2"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 2</button>
 					</div>
 						<div class="content-row">
-						<button id="atk03" class="field-dado" data-modifier="atk3" data-dice-type="1d20" data-label="Ataque3"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 3</button>
+						<button id="atk03" class="field-dado" data-modifier="atk3sum" data-dice-type="1d20" data-label="Ataque3"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 3</button>
 					</div>
 						<div class="content-row">
-						<button id="atk04" class="field-dado" data-modifier="atk4" data-dice-type="1d20" data-label="Ataque4"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 4</button>
+						<button id="atk04" class="field-dado" data-modifier="atk4sum" data-dice-type="1d20" data-label="Ataque4"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 4</button>
 					</div>
 						<div class="content-row">
-						<button id="atk05" class="field-dado" data-modifier="atk5" data-dice-type="1d20" data-label="Ataque5"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 5</button>
+						<button id="atk05" class="field-dado" data-modifier="atk5sum" data-dice-type="1d20" data-label="Ataque5"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 5</button>
 					</div>
 						<div class="content-row">
-						<button id="atk06" class="field-dado" data-modifier="atk6" data-dice-type="1d20" data-label="Ataque6"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 6</button>
+						<button id="atk06" class="field-dado" data-modifier="atk6sum" data-dice-type="1d20" data-label="Ataque6"><i class="ts-icon-d20 ts-icon-small" style="margin-right: 0.2em;"></i>Ataque 6</button>
 					</div>
 					<div class="buff content-row">
 						<label class="field-title" data-dice-type="1d4" data-label="Blessed">Bless</label><input id="blessed" type="checkbox" class="field-data-short"></input><p class="field-desc">Bendecido</p>
@@ -310,22 +310,89 @@
 				</div>
 				<div class="container">
 					<div class="content-row">
-						<input id="atk1" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio1" type="text" class="field-data"></input></label>
-					</div>
-						<div class="content-row">
-						<input id="atk2" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio2" type="text" class="field-data"></input></label>
+						<select title="select" name="atk1" class="select">
+						  <option value="none" selected disabled>-</option>
+						  <option value="strm">FUE</option>
+						  <option value="dexm">DEX</option>
+						  <option value="conm">CON</option>
+						  <option value="intm">INT</option>
+						  <option value="wism">SAB</option>
+						  <option value="cham">CAR</option>
+						</select>
+						<input id="atk1" type="number" class="field-data-short" value="0"></input><input style="display: none" id="atk1mod" type="number" class="field-data-short" value="0"></input>
+						<input style="display: none" id="atk1sum" type="number" class="field-data-short" value="0"></input>
+						<label class="field-title"><input id="espacio1" type="text" class="field-data"></input></label>
 					</div>
 					<div class="content-row">
-						<input id="atk3" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio3" type="text" class="field-data"></input></label>
+						<select title="select" name ="atk2" class="select">
+						  <option value="none" selected disabled>-</option>
+						  <option value="strm">FUE</option>
+						  <option value="dexm">DEX</option>
+						  <option value="conm">CON</option>
+						  <option value="intm">INT</option>
+						  <option value="wism">SAB</option>
+						  <option value="cham">CAR</option>
+						</select>
+						<input id="atk2" type="number" class="field-data-short" value="0"></input><input style="display: none" id="atk2mod" type="number" class="field-data-short" value="0"></input>
+						<input style="display: none" id="atk2sum" type="number" class="field-data-short" value="0"></input>
+						<label class="field-title"><input id="espacio2" type="text" class="field-data"></input></label>
 					</div>
 					<div class="content-row">
-						<input id="atk4" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio4" type="text" class="field-data"></input></label>
+						<select title="select" name="atk3" class="select">
+						  <option value="none" selected disabled>-</option>
+						  <option value="strm">FUE</option>
+						  <option value="dexm">DEX</option>
+						  <option value="conm">CON</option>
+						  <option value="intm">INT</option>
+						  <option value="wism">SAB</option>
+						  <option value="cham">CAR</option>
+						</select>
+						<input id="atk3" type="number" class="field-data-short" value="0"></input><input style="display: none" id="atk3mod" type="number" class="field-data-short" value="0"></input>
+						<input style="display: none" id="atk3sum" type="number" class="field-data-short" value="0"></input>
+						<label class="field-title"><input id="espacio3" type="text" class="field-data"></input></label>
 					</div>
 					<div class="content-row">
-						<input id="atk5" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio5" type="text" class="field-data"></input></label>
+						<select title="select" name="atk4" class="select">
+						  <option value="none" selected disabled>-</option>
+						  <option value="strm">FUE</option>
+						  <option value="dexm">DEX</option>
+						  <option value="conm">CON</option>
+						  <option value="intm">INT</option>
+						  <option value="wism">SAB</option>
+						  <option value="cham">CAR</option>
+						</select>
+						<input id="atk4" type="number" class="field-data-short" value="0"></input><input style="display: none" id="atk4mod" type="number" class="field-data-short" value="0"></input>
+						<input style="display: none" id="atk4sum" type="number" class="field-data-short" value="0"></input>
+						<label class="field-title"><input id="espacio4" type="text" class="field-data"></input></label>
 					</div>
 					<div class="content-row">
-						<input id="atk6" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio6" type="text" class="field-data"></input></label>
+						<select title="select" name="atk5" class="select">
+						  <option value="none" selected disabled>-</option>
+						  <option value="strm">FUE</option>
+						  <option value="dexm">DEX</option>
+						  <option value="conm">CON</option>
+						  <option value="intm">INT</option>
+						  <option value="wism">SAB</option>
+						  <option value="cham">CAR</option>
+						</select>
+						<input id="atk5" type="number" class="field-data-short" value="0"></input><input style="display: none" id="atk5mod" type="number" class="field-data-short" value="0"></input>
+						<input style="display: none" id="atk5sum" type="number" class="field-data-short" value="0"></input>
+						<label class="field-title"><input id="espacio5" type="text" class="field-data"></input></label>
+					</div>
+					<div class="content-row">
+						<select title="select"name ="atk6" class="select">
+						  <option value="none" selected disabled>-</option>
+						  <option value="strm">FUE</option>
+						  <option value="dexm">DEX</option>
+						  <option value="conm">CON</option>
+						  <option value="intm">INT</option>
+						  <option value="wism">SAB</option>
+						  <option value="cham">CAR</option>
+						</select>
+						<input id="atk6" type="number" class="field-data-short" value="0"></input><input style="display: none" id="atk6mod" type="number" class="field-data-short" value="0"></input>
+						<input style="display: none" id="atk6sum" type="number" class="field-data-short" value="0"></input>
+						<label class="field-title"><input id="espacio6" type="text" class="field-data"></input></label>
+						
 					</div>
 						<div class="buff content-row">
 						<label class="field-title" data-dice-type="1d6" data-label="Blessed">Inspirado</label><input id="inspire" type="checkbox" class="field-data-short"></input><p class="field-desc">Inspiracion de Bardo</p>
