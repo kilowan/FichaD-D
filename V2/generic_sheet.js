@@ -169,7 +169,7 @@ function onInputChange(input, name, id, level) {
             data[input.id] = input.checked ? "on" : "off";
 		 } else if (name == "magias") {
 			data[name][level].list[id] = input;
-		 } else if (name == "dotes") {
+		 } else if (name == "dotes" || name == "feats") {
 			data[name][id] = input;
         } else {
             data[input.id] = input.value;
@@ -284,8 +284,8 @@ function populateTHAC0(event) {
     }
 }
 
-function parseGifts(param) {
-	let dotesDOM = document.getElementById("dotes");
+function parse(param, name) {
+	let dotesDOM = document.getElementById(name);
 	let gifts = param;
 	 Object.entries(gifts).forEach((key) => {
 		var parentDiv = createNewDiv([key[0], key[1]], false)
@@ -315,15 +315,15 @@ function parseGifts(param) {
 			
 			name.addEventListener("change", (event) => {
 				if (name.value.length != key[1].name.length && name.value.length != 0) {
-					if (local) saveGiftLocal(key[0], {name: name.value, description: description.value}, false);
-					else onInputChange({name: name.value, description: description.value}, "dotes", key[0]);
+					if (local) saveLocal(key[0], {name: name.value, description: description.value}, false, name);
+					else onInputChange({name: name.value, description: description.value}, name, key[0]);
 				}
 			});
 			
 			description.addEventListener("change", (event) => {
 				if (description.value.length != key[1].description.length && description.value.length != 0) {
-					if (local) saveGiftLocal(key[0], {name: name.value, description: description.value}, false);
-					else onInputChange({name: name.value, description: description.value}, "dotes", key[0]);
+					if (local) saveLocal(key[0], {name: name.value, description: description.value}, false, name);
+					else onInputChange({name: name.value, description: description.value}, name, key[0]);
 				}
 			});
 			
@@ -358,8 +358,8 @@ function parseGifts(param) {
 		
 		masterDiv.addEventListener("focusout", (event) => {
 			if (emptyx.value.length >0 && emptyy.value.length >0) {
-				if (local) saveGiftLocal(id, {name: emptyx.value, description: emptyy.value}, true);
-				else saveGift(id, {name: emptyx.value, description: emptyy.value}, true);
+				if (local) saveLocal(id, {name: emptyx.value, description: emptyy.value}, true, name);
+				else save(id, {name: emptyx.value, description: emptyy.value}, true, name);
 			}
 		});
 		
@@ -434,6 +434,8 @@ function loadStoredData() {
 		
 		if (data["magias"] == undefined) data["magias"] = [];
 		if (data["dotes"] == undefined) data["dotes"] = {};
+		if (data["feats"] == undefined) data["feats"] = {};
+		
 		var levels = 10;
 		for (let i = 0; i < levels; i++) {
 		  if (data["magias"][i] == undefined) {
@@ -454,8 +456,8 @@ function loadStoredData() {
 				element.dispatchEvent(new Event('change'));
 			} else if (key == "magias") {
 				parseMagic(value);
-			} else if (key == "dotes") {
-				parseGifts(value);
+			} else if (key == "dotes" || key == "feats") {
+				parse(value, key);
 			} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
 				var idsum = `${element.id}sum`;
 				var sum = document.getElementById(idsum);
@@ -498,6 +500,7 @@ function loadLocalData() {
 	
 	if (data["magias"] == undefined) data["magias"] = [];
 	if (data["dotes"] == undefined) data["dotes"] = {};
+	if (data["feats"] == undefined) data["feats"] = {};
 	
 	var levels = 10;
 	for (let i = 0; i < levels; i++) {
@@ -519,8 +522,8 @@ function loadLocalData() {
 			element.dispatchEvent(new Event('change'));
 		} else if (key == "magias") {
 			parseMagic(value);
-		} else if (key == "dotes") {
-			parseGifts(value);
+		} else if (key == "dotes" || key == "feats") {
+			parse(value, key);
 		} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
 			var idsum = `${element.id}sum`;
 			var sum = document.getElementById(idsum);
@@ -543,7 +546,7 @@ function loadLocalData() {
 	}
 }
 
-function saveGift(id, data, reload) {
+function save(id, data, reload, name) {
     //handles input changes to store them in local storage
     // get already stored data
     TS.localStorage.campaign.getBlob().then((storedData) => {
@@ -551,7 +554,7 @@ function saveGift(id, data, reload) {
         //defaulting to an empty json document "{}" if stored data is false
         var dataJson = JSON.parse(storedData || "{}");
 		
-		dataJson["dotes"][id] = data;
+		dataJson[name][id] = data;
 		
         //set new data, handle response
         TS.localStorage.campaign.setBlob(JSON.stringify(dataJson)).then(() => {
@@ -574,11 +577,11 @@ function saveGift(id, data, reload) {
     });
 }
 
-function saveGiftLocal(id, data, reload) {
+function saveLocal(id, data, reload, name) {
 	var localData = localStorage.getItem("campaign");
 	var dataJson = JSON.parse(localData || "{}");
 	
-	dataJson["dotes"][id] = data;
+	dataJson[name][id] = data;
 	
 	localStorage.setItem("campaign", JSON.stringify(dataJson));
 	clearStorageButton.classList.add("danger");
@@ -681,14 +684,14 @@ function removeMagicLocal(level, id) {
 	localStorage.setItem("campaign", JSON.stringify(dataJson));
 }
 
-function removeGiftLocal(id) {
+function removeLocal(id, name) {
 	var localData = localStorage.getItem("campaign");
 	var dataJson = JSON.parse(localData || "{}");
-	delete dataJson["dotes"][id];
+	delete dataJson[name][id];
 	localStorage.setItem("campaign", JSON.stringify(dataJson));
 }
 
-function removeGift(id) {
+function remove(id, name) {
     //handles input changes to store them in local storage
     // get already stored data
     TS.localStorage.campaign.getBlob().then((storedData) => {
@@ -696,7 +699,7 @@ function removeGift(id) {
         //defaulting to an empty json document "{}" if stored data is false
         var dataJson = JSON.parse(storedData || "{}");
 		
-		delete dataJson["dotes"][id];
+		delete dataJson[name][id];
 		
         //set new data, handle response
         TS.localStorage.campaign.setBlob(JSON.stringify(dataJson)).then(() => {
@@ -777,7 +780,7 @@ function createDiv(level, data, empty) {
 	return div;
 }
 
-function createNewDiv(data, empty) {
+function createNewDiv(data, empty, name) {
 	var div = document.createElement("div");
 	div.className = "content-row";
 	div.id = data[0];
@@ -788,16 +791,16 @@ function createNewDiv(data, empty) {
 	
 	name.addEventListener("input", () => {
 	    if (description.value.trim() === "" && name.value.trim() === "" && !empty) {
-			if (local) removeGiftLocal(data[0]);
-			else removeGift(data[0]);
+			if (local) removeLocal(data[0], name);
+			else removeGift(data[0], name);
 			
 			div.remove();
 		}
 	});
 	description.addEventListener("input", () => {
 	    if (description.value.trim() === "" && name.value.trim() === "" && !empty) {
-			if (local) removeGiftLocal(data[0]);
-			else removeGift(data[0]);
+			if (local) removeLocal(data[0], name);
+			else remove(data[0], name);
 			
 			div.remove();
 		}
