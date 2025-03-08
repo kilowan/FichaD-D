@@ -463,9 +463,22 @@ function loadStoredData() {
 			} else if (key == "dotes" || key == "feats") {
 				parse(value, key);
 			} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
-				var idsum = `${element.id}sum`;
+				var idsum = `${element.id}sum`;		
 				var sum = document.getElementById(idsum);
-				sum.value = value;
+				var name = `${element.id}t`;
+				if (name != undefined) {
+					var modm = data[name];
+					var valuemod = data[modm];
+					if (valuemod != undefined) {
+						var valuemodint = parseInt(data[modm]);
+						var sumint = valuemodint + parseInt(value);
+						sum.value = sumint;
+						var modname = `${element.id}mod`;
+						var idmod = document.getElementById(modname);
+						idmod.value = valuemod;
+					}
+				} else sum.value = value;
+				
 				var id = document.getElementById(element.id);
 				id.value = value;
 				id.addEventListener("change", (event) => {
@@ -529,9 +542,22 @@ function loadLocalData() {
 		} else if (key == "dotes" || key == "feats") {
 			parse(value, key);
 		} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
-			var idsum = `${element.id}sum`;
+			var idsum = `${element.id}sum`;		
 			var sum = document.getElementById(idsum);
-			sum.value = value;
+			var name = `${element.id}t`;
+			if (name != undefined) {
+				var modm = data[name];
+				var valuemod = data[modm];
+				if (valuemod != undefined) {
+					var valuemodint = parseInt(data[modm]);
+					var sumint = valuemodint + parseInt(value);
+					sum.value = sumint;
+					var modname = `${element.id}mod`;
+					var idmod = document.getElementById(modname);
+					idmod.value = valuemod;
+				}
+			} else sum.value = value;
+			
 			var id = document.getElementById(element.id);
 			id.value = value;
 			id.addEventListener("change", (event) => {
