@@ -52,6 +52,7 @@ blesseds.forEach((blessed) => {
 			// var mod = document.getElementById(idmod);
 			// mod.value = modifier;
 			// sum.value = modified;
+			// saveInputLocal(event.target, "selector")
 		// });
 	// });
 // });
@@ -92,6 +93,7 @@ window.addEventListener("load", () =>
 			var mod = document.getElementById(idmod);
 			mod.value = modifier;
 			sum.value = modified;
+			onInputChange(event.target, "selector");
 		});
 	});
 });
@@ -166,11 +168,13 @@ function onInputChange(input, name, id, level) {
         //defaulting to an empty json document "{}" if stored data is false
         data = JSON.parse(storedData || "{}");
         if (input.type == "checkbox") {
-            data[input.id] = input.checked ? "on" : "off";
-		 } else if (name == "magias") {
+			data[input.id] = input.checked ? "on" : "off";
+		} else if (name == "magias") {
 			data[name][level].list[id] = input;
-		 } else if (name == "dotes" || name == "feats") {
+		} else if (name == "dotes" || name == "feats") {
 			data[name][id] = input;
+		} else if (name == "selector") {
+			data[input.id] = input.value;
         } else {
             data[input.id] = input.value;
         }
@@ -591,6 +595,26 @@ function saveLocal(id, data, reload, name) {
 	if (reload) {
 		window.location.reload();
 	}
+}
+
+function saveInputLocal(input, name) {
+    //handles input changes to store them in local storage
+	
+	var localData = localStorage.getItem("campaign");
+    let data;
+        data = JSON.parse(localData || "{}");
+		if (name == "selector")	data[input.id] = input.value;
+		
+		//if storing the data succeeded, enable the clear storage button
+		localStorage.setItem("campaign", JSON.stringify(data));
+		clearStorageButton.classList.add("danger");
+		clearStorageButton.disabled = false;
+		clearStorageButton.textContent = "Clear Character Sheet";
+
+    if (input.id == "abilities-text") {
+        let actions = parseActions(input.value);
+        addActions(actions);
+    }
 }
 
 function parseMagic(param) {
