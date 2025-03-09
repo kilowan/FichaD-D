@@ -1,70 +1,72 @@
 var clearStorageButton = undefined;
 var local = false;
 
+const bloque    = document.querySelectorAll('.bloque');
+const ul = document.getElementById('ul');
+var activo = Array.from(ul.children).filter(x => x.className == "li activo" )[0];
+if (activo != undefined) {
+	setVisibles(activo, bloque);
+}
+
+ul.addEventListener("click", (event) => {
+	document.querySelector(".activo")?.classList.remove("activo");
+	event.target.classList.add("activo");
+	setVisibles(event.target, bloque);
+});
+
+const blesseds = document.querySelectorAll(".buff");
+blesseds.forEach((blessed) => {
+	blessed.addEventListener("change", (event) => {
+		if (event.target.checked) {
+			var dados = document.querySelectorAll(".field-dado");
+			dados.forEach((dado) => {
+				var attr = dado.getAttribute("data-dice-type");
+				var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+				dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
+			});
+		} else {
+			var dados = document.querySelectorAll(".field-dado");
+			dados.forEach((dado) => {
+				var attr = dado.getAttribute("data-dice-type");
+				var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+				
+				let textToDelete = ` + ${modifier}`;
+				attr = attr.replace(textToDelete, "");
+				dado.setAttribute("data-dice-type", attr);
+			});
+		}
+	});
+});
+const selectors = document.querySelectorAll(".select");
+selectors.forEach((selector) => {
+	var id = selector.getAttribute("name");
+	var idmod = `${id}mod`;
+	var idSum = `${id}sum`;
+	var parameter = document.getElementById(id);
+	selector.addEventListener("change", (event) => {
+		var init = parseInt(parameter.value);
+		var modId = event.target[event.target.selectedIndex].getAttribute("value");
+		var modifier = parseInt(document.getElementById(modId).value);
+		var modified = init + modifier;
+		var sum = document.getElementById(idSum);
+		var mod = document.getElementById(idmod);
+		mod.value = modifier;
+		sum.value = modified;
+		
+		if (local) saveInputLocal(event.target, "selector");
+		else onInputChange(event.target, "selector");
+	});
+});
+
+document.getElementById('valueInput').addEventListener('input', function() {
+	const value = parseInt(this.value, 10);
+	updateBar(value);
+});
+
+
+
 window.addEventListener("load", () => 
-{
-	const bloque    = document.querySelectorAll('.bloque');
-	const ul = document.getElementById('ul');
-	var activo = Array.from(ul.children).filter(x => x.className == "li activo" )[0];
-	if (activo != undefined) {
-		setVisibles(activo, bloque);
-	}
-	
-	ul.addEventListener("click", (event) => {
-		document.querySelector(".activo")?.classList.remove("activo");
-		event.target.classList.add("activo");
-		setVisibles(event.target, bloque);
-	});
-	
-	const blesseds = document.querySelectorAll(".buff");
-	blesseds.forEach((blessed) => {
-		blessed.addEventListener("change", (event) => {
-			if (event.target.checked) {
-				var dados = document.querySelectorAll(".field-dado");
-				dados.forEach((dado) => {
-					var attr = dado.getAttribute("data-dice-type");
-					var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
-					dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
-				});
-			} else {
-				var dados = document.querySelectorAll(".field-dado");
-				dados.forEach((dado) => {
-					var attr = dado.getAttribute("data-dice-type");
-					var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
-					
-					let textToDelete = ` + ${modifier}`;
-					attr = attr.replace(textToDelete, "");
-					dado.setAttribute("data-dice-type", attr);
-				});
-			}
-		});
-	});
-	const selectors = document.querySelectorAll(".select");
-	selectors.forEach((selector) => {
-		var id = selector.getAttribute("name");
-		var idmod = `${id}mod`;
-		var idSum = `${id}sum`;
-		var parameter = document.getElementById(id);
-		selector.addEventListener("change", (event) => {
-			var init = parseInt(parameter.value);
-			var modId = event.target[event.target.selectedIndex].getAttribute("value");
-			var modifier = parseInt(document.getElementById(modId).value);
-			var modified = init + modifier;
-			var sum = document.getElementById(idSum);
-			var mod = document.getElementById(idmod);
-			mod.value = modifier;
-			sum.value = modified;
-			
-			if (local) saveInputLocal(event.target, "selector");
-			else onInputChange(event.target, "selector");
-		});
-	});
-	
-	document.getElementById('valueInput').addEventListener('input', function() {
-		const value = parseInt(this.value, 10);
-		updateBar(value);
-	});
-	
+{	
 	if (local) loadLocalData();
 });
 
