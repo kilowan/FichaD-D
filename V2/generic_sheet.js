@@ -1,83 +1,44 @@
 var clearStorageButton = undefined;
 var local = false;
 
-const li        = document.querySelectorAll('.li');
-const bloque    = document.querySelectorAll('.bloque');
-
-const blesseds = document.querySelectorAll(".buff");
-
-
-
-blesseds.forEach((blessed) => {
-	blessed.addEventListener("change", (event) => {
-		if (event.target.checked) {
-			var dados = document.querySelectorAll(".field-dado");
-			dados.forEach((dado) => {
-				var attr = dado.getAttribute("data-dice-type");
-				var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
-				dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
-			});
-		} else {
-			var dados = document.querySelectorAll(".field-dado");
-			dados.forEach((dado) => {
-				var attr = dado.getAttribute("data-dice-type");
-				var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
-				
-				let textToDelete = ` + ${modifier}`;
-				attr = attr.replace(textToDelete, "");
-				dado.setAttribute("data-dice-type", attr);
-			});
-		}
-	});
-});
-
-
-//Local
-// window.addEventListener("load", () => 
-// {
-	// local = true;
-	// loadLocalData();
-	// const selectors = document.querySelectorAll(".select");
-	// selectors.forEach((selector) => {
-		// var id = selector.getAttribute("name");
-		// var idmod = `${id}mod`;
-		// var idSum = `${id}sum`;
-		// var parameter = document.getElementById(id);
-		// selector.addEventListener("change", (event) => {
-			// var init = parseInt(parameter.value);
-			// var modId = event.target[event.target.selectedIndex].getAttribute("value");
-			// var modifier = parseInt(document.getElementById(modId).value);
-			// var modified = init + modifier;
-			// var sum = document.getElementById(idSum);
-			// var mod = document.getElementById(idmod);
-			// mod.value = modifier;
-			// sum.value = modified;
-			// saveInputLocal(event.target, "selector")
-		// });
-	// });
-// });
-
-//Talespire
 window.addEventListener("load", () => 
 {
-	// var container = document.getElementById("container");
-	// var pruebas2 = document.getElementById("element");
-	// var element2 = document.createElement("div");
-	// element2.className = "content-row";
-	// element2.innerHTML = pruebas2.innerHTML;
-	// element2.childNodes[1].childNodes[1].textContent = "Ataque 7"
-	// element2.childNodes[1].setAttribute("data-modifier", "atk7");
-	// //element2.childNodes[1].setAttribute("data-dice-type", "15d20");
-	// element2.childNodes[1].setAttribute("data-label", "Ataque7");
-	// element2.childNodes[1].setAttribute("id", "atk07");
-	// container.appendChild(element2);
+	const bloque    = document.querySelectorAll('.bloque');
+	const ul = document.getElementById('ul');
+	var activo = Array.from(ul.children).filter(x => x.className == "li activo" )[0];
+	if (activo != undefined) {
+		setVisibles(activo, bloque);
+	}
 	
-	// var container2 = document.getElementById("container2");
-	// var pruebas1 = document.getElementById("element2");
-	// var element1 = document.createElement("div");
-	// element1.innerHTML = pruebas1.innerHTML;
-	// element1.childNodes[1].setAttribute("id", "atk7");
-	// container2.appendChild(element1);
+	ul.addEventListener("click", (event) => {
+		document.querySelector(".activo")?.classList.remove("activo");
+		event.target.classList.add("activo");
+		setVisibles(event.target, bloque);
+	});
+	
+	const blesseds = document.querySelectorAll(".buff");
+	blesseds.forEach((blessed) => {
+		blessed.addEventListener("change", (event) => {
+			if (event.target.checked) {
+				var dados = document.querySelectorAll(".field-dado");
+				dados.forEach((dado) => {
+					var attr = dado.getAttribute("data-dice-type");
+					var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+					dado.setAttribute("data-dice-type", `${attr} + ${modifier}`);
+				});
+			} else {
+				var dados = document.querySelectorAll(".field-dado");
+				dados.forEach((dado) => {
+					var attr = dado.getAttribute("data-dice-type");
+					var modifier = event.target.parentElement.childNodes[1].getAttribute("data-dice-type");
+					
+					let textToDelete = ` + ${modifier}`;
+					attr = attr.replace(textToDelete, "");
+					dado.setAttribute("data-dice-type", attr);
+				});
+			}
+		});
+	});
 	const selectors = document.querySelectorAll(".select");
 	selectors.forEach((selector) => {
 		var id = selector.getAttribute("name");
@@ -93,25 +54,30 @@ window.addEventListener("load", () =>
 			var mod = document.getElementById(idmod);
 			mod.value = modifier;
 			sum.value = modified;
-			onInputChange(event.target, "selector");
+			
+			if (local) saveInputLocal(event.target, "selector");
+			else onInputChange(event.target, "selector");
 		});
 	});
+	
+	document.getElementById('valueInput').addEventListener('input', function() {
+		const value = parseInt(this.value, 10);
+		updateBar(value);
+	});
+	
+	if (local) loadLocalData();
 });
 
-li.forEach( ( cadaLi , i )=>{
-    li[i].addEventListener('click',()=>{
-
-        li.forEach( ( cadaLi , i )=>{
-            li[i].classList.remove('activo');
-            //bloque[i].classList.remove('activo');
-			bloque[i].style.display = "none";
-        })
-
-        li[i].classList.add('activo');
-        //bloque[i].classList.add('activo')
-		bloque[i].style.display = "block";
-    })
-})
+function setVisibles(activo, bloque) {
+	const visibles = Array.from(bloque).filter(el => 
+		window.getComputedStyle(el).getPropertyValue("display") !== "none"
+	);
+	
+	visibles.forEach(el => {
+		el.style.display = "none";
+	});
+	bloque[activo.getAttribute("index")].style.display = "block";
+} 
 
 function initSheet() {
     let inputs = document.querySelectorAll("input,button,textarea");
@@ -1265,11 +1231,6 @@ function updateBar(value) {
         dynamicBar.style.left = '50%';
     }
 }
-
-document.getElementById('valueInput').addEventListener('input', function() {
-    const value = parseInt(this.value, 10);
-    updateBar(value);
-});
 
 function onStateChangeEvent(msg) {
     if (msg.kind === "hasInitialized") {
