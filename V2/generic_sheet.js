@@ -1,5 +1,4 @@
 var clearStorageButton = undefined;
-var local = false;
 
 const bloque    = document.querySelectorAll('.bloque');
 const ul = document.getElementById('ul');
@@ -53,21 +52,13 @@ selectors.forEach((selector) => {
 		mod.value = modifier;
 		sum.value = modified;
 		
-		if (local) saveInputLocal(event.target, "selector");
-		else onInputChange(event.target, "selector");
+		onInputChange(event.target, "selector");
 	});
 });
 
 document.getElementById('valueInput').addEventListener('input', function() {
 	const value = parseInt(this.value, 10);
 	updateBar(value);
-});
-
-
-
-window.addEventListener("load", () => 
-{	
-	if (local) loadLocalData();
 });
 
 function setVisibles(activo, bloque) {
@@ -287,15 +278,13 @@ function parse(param, name) {
 			
 			name.addEventListener("change", (event) => {
 				if (name.value.length != key[1].name.length && name.value.length != 0) {
-					if (local) saveLocal(key[0], {name: name.value, description: description.value}, false, name);
-					else onInputChange({name: name.value, description: description.value}, name, key[0]);
+					onInputChange({name: name.value, description: description.value}, name, key[0]);
 				}
 			});
 			
 			description.addEventListener("change", (event) => {
 				if (description.value.length != key[1].description.length && description.value.length != 0) {
-					if (local) saveLocal(key[0], {name: name.value, description: description.value}, false, name);
-					else onInputChange({name: name.value, description: description.value}, name, key[0]);
+					onInputChange({name: name.value, description: description.value}, name, key[0]);
 				}
 			});
 			
@@ -330,8 +319,7 @@ function parse(param, name) {
 		
 		masterDiv.addEventListener("focusout", (event) => {
 			if (emptyx.value.length >0 && emptyy.value.length >0) {
-				if (local) saveLocal(id, {name: emptyx.value, description: emptyy.value}, true, name);
-				else save(id, {name: emptyx.value, description: emptyy.value}, true, name);
+				save(id, {name: emptyx.value, description: emptyy.value}, true, name);
 			}
 		});
 		
@@ -367,28 +355,6 @@ function saveMagic(level, id, data, reload) {
         TS.debug.log("Failed to load data from local storage: " + getBlobResponse.cause);
         console.error("Failed to load data from local storage:", getBlobResponse);
     });
-}
-
-function saveMagicLocal(level, id, data, reload) {
-    //handles input changes to store them in local storage
-    // get already stored data
-	var localData = localStorage.getItem("campaign");
-        //parse stored blob as json, but also handle if it's empty by
-        //defaulting to an empty json document "{}" if stored data is false
-        var dataJson = JSON.parse(localData || "{}");
-		
-		dataJson["magias"][level].list[id] = data;
-		
-        //set new data, handle response
-		localStorage.setItem("campaign", JSON.stringify(dataJson));
-            //if storing the data succeeded, enable the clear storage button
-            clearStorageButton.classList.add("danger");
-            clearStorageButton.disabled = false;
-            clearStorageButton.textContent = "Clear Character Sheet";
-			clearStorageButton = document.getElementById("clear-storage");
-			if (reload) {
-				window.location.reload();
-			}
 }
 
 function loadStoredData() {
@@ -430,6 +396,8 @@ function loadStoredData() {
 				parseMagic(value);
 			} else if (key == "dotes" || key == "feats") {
 				parse(value, key);
+			// } else if (key == "atacks") {
+				// buildCombatModule(value);
 			} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
 				var idsum = `${element.id}sum`;		
 				var sum = document.getElementById(idsum);
@@ -469,81 +437,6 @@ function loadStoredData() {
     });
 }
 
-function loadLocalData() {
-	//localstorage blobs are just unstructured text.
-	//this means we can store whatever we like, but we also need to parse it to use it.
-	clearStorageButton = document.getElementById("clear-storage");
-	var datajson = localStorage.getItem("campaign");
-	
-	let data = JSON.parse(datajson || "{}");
-	
-	if (Object.entries(data).length > 0) {
-		clearStorageButton.classList.add("danger");
-		clearStorageButton.disabled = false;
-		clearStorageButton.textContent = "Clear Character Sheet";
-	}
-	
-	if (data["magias"] == undefined) data["magias"] = [];
-	if (data["dotes"] == undefined) data["dotes"] = {};
-	if (data["feats"] == undefined) data["feats"] = {};
-	
-	var levels = 10;
-	for (let i = 0; i < levels; i++) {
-	  if (data["magias"][i] == undefined) {
-		  data["magias"][i] = {
-			 level: i,
-			 list: {}
-		  };
-	  }
-	}
-	
-    localStorage.setItem("campaign", JSON.stringify(data));
-	
-	let keyCount = 0;
-	for (let [key, value] of Object.entries(data)) {
-		keyCount++;
-		let element = document.getElementById(key);
-		if (key == "thac0") {
-			element.dispatchEvent(new Event('change'));
-		} else if (key == "magias") {
-			parseMagic(value);
-		} else if (key == "dotes" || key == "feats") {
-			parse(value, key);
-		} else if (element.id == "atk1" || element.id == "atk2" || element.id == "atk3" || element.id == "atk4" || element.id == "atk5" || element.id == "atk6") {
-			var idsum = `${element.id}sum`;		
-			var sum = document.getElementById(idsum);
-			var name = `${element.id}t`;
-			if (name != undefined) {
-				var modm = data[name];
-				var valuemod = data[modm];
-				if (valuemod != undefined) {
-					var valuemodint = parseInt(data[modm]);
-					var sumint = valuemodint + parseInt(value);
-					sum.value = sumint;
-					var modname = `${element.id}mod`;
-					var idmod = document.getElementById(modname);
-					idmod.value = valuemod;
-				}
-			} else sum.value = value;
-			
-			var id = document.getElementById(element.id);
-			id.value = value;
-			id.addEventListener("change", (event) => {
-				var id = document.getElementById(event.target.id);
-				var mod = document.getElementById(`${event.target.id}mod`);
-				var sum = document.getElementById(`${event.target.id}sum`);
-				var modified = parseInt(id.value) + parseInt(mod.value);
-				sum.value = modified;
-			});
-		} else if (element.type != undefined && element.type == "checkbox") {
-			element.checked = value == "on" ? true : false;
-		} else if (key == "abilities-text") {
-			let results = parseActions(element.value);
-			addActions(results);
-		} else element.value = value;
-	}
-}
-
 function save(id, data, reload, name) {
     //handles input changes to store them in local storage
     // get already stored data
@@ -575,42 +468,6 @@ function save(id, data, reload, name) {
     });
 }
 
-function saveLocal(id, data, reload, name) {
-	var localData = localStorage.getItem("campaign");
-	var dataJson = JSON.parse(localData || "{}");
-	
-	dataJson[name][id] = data;
-	
-	localStorage.setItem("campaign", JSON.stringify(dataJson));
-	clearStorageButton.classList.add("danger");
-	clearStorageButton.disabled = false;
-	clearStorageButton.textContent = "Clear Character Sheet";
-	clearStorageButton = document.getElementById("clear-storage");
-	if (reload) {
-		window.location.reload();
-	}
-}
-
-function saveInputLocal(input, name) {
-    //handles input changes to store them in local storage
-	
-	var localData = localStorage.getItem("campaign");
-    let data;
-        data = JSON.parse(localData || "{}");
-		if (name == "selector")	data[input.id] = input.value;
-		
-		//if storing the data succeeded, enable the clear storage button
-		localStorage.setItem("campaign", JSON.stringify(data));
-		clearStorageButton.classList.add("danger");
-		clearStorageButton.disabled = false;
-		clearStorageButton.textContent = "Clear Character Sheet";
-
-    if (input.id == "abilities-text") {
-        let actions = parseActions(input.value);
-        addActions(actions);
-    }
-}
-
 function parseMagic(param) {
 	let magias = param;
 	
@@ -625,7 +482,7 @@ function parseMagic(param) {
 			var descriptionInput = parentDiv.children[1];
 			var description = parentDiv.children[2];
 			
-			name.addEventListener("click", (event) => {
+			name.addEventListener("click", () => {
 				descriptionInput.style = null;
 				description.style.display = "none";
 				name.clicked = true;
@@ -640,15 +497,13 @@ function parseMagic(param) {
 			
 			name.addEventListener("change", (event) => {
 				if (name.value.length != magialvl[1].name.length && name.value.length != 0) {
-					if (local) saveMagicLocal(level, magialvl[0], {name: name.value, description: description.value}, false);
-					else onInputChange({name: name.value, description: description.value}, "magias", magialvl[0], level);
+					onInputChange({name: name.value, description: description.value}, "magias", magialvl[0], level);
 				}
 			});
 			
 			description.addEventListener("change", (event) => {
 				if (description.value.length != magialvl[1].description.length && description.value.length != 0) {
-					if (local) saveMagicLocal(level, magialvl[0], {name: name.value, description: description.value}, false);
-					else onInputChange({name: name.value, description: description.value}, "magias", magialvl[0], level);
+					onInputChange({name: name.value, description: description.value}, "magias", magialvl[0], level);
 				}
 			});
 			
@@ -686,27 +541,12 @@ function parseMagic(param) {
 		magiaDOM.appendChild(div);
 		masterDiv.addEventListener("focusout", (event) => {
 			if (emptyx.value.length >0 && emptyy.value.length >0) {		
-				if (local) saveMagicLocal(level, id, {name: emptyx.value, description: emptyy.value}, true);
-				else saveMagic(level, id, {name: emptyx.value, description: emptyy.value}, true);
+				saveMagic(level, id, {name: emptyx.value, description: emptyy.value}, true);
 			}
 		});
 		
 		div.appendChild(masterDiv);
 	});
-}
-
-function removeMagicLocal(level, id) {
-	var localData = localStorage.getItem("campaign");
-	var dataJson = JSON.parse(localData || "{}");
-	delete dataJson["magias"][level].list[id];
-	localStorage.setItem("campaign", JSON.stringify(dataJson));
-}
-
-function removeLocal(id, name) {
-	var localData = localStorage.getItem("campaign");
-	var dataJson = JSON.parse(localData || "{}");
-	delete dataJson[name][id];
-	localStorage.setItem("campaign", JSON.stringify(dataJson));
 }
 
 function remove(id, name) {
@@ -766,15 +606,13 @@ function createDiv(level, data, empty) {
 	
 	name.addEventListener("input", () => {
 	    if (description.value.trim() === "" && name.value.trim() === "" && !empty) {
-			if (local) removeMagicLocal(level, data[0]);
-			else removeMagic(level, data[0]);
+			removeMagic(level, data[0]);
 			div.remove();
 		}
 	});
 	description.addEventListener("input", () => {
 	    if (description.value.trim() === "" && name.value.trim() === "" && !empty) {
-			if (local) removeMagicLocal(level, data[0]);
-			else removeMagic(level, data[0]);
+			removeMagic(level, data[0]);
 			div.remove();
 		}
 	});
@@ -809,16 +647,14 @@ function createNewDiv(data, empty, name) {
 	
 	name.addEventListener("input", () => {
 	    if (description.value.trim() === "" && name.value.trim() === "" && !empty) {
-			if (local) removeLocal(data[0], name);
-			else removeGift(data[0], name);
+			removeGift(data[0], name);
 			
 			div.remove();
 		}
 	});
 	description.addEventListener("input", () => {
 	    if (description.value.trim() === "" && name.value.trim() === "" && !empty) {
-			if (local) removeLocal(data[0], name);
-			else remove(data[0], name);
+			remove(data[0], name);
 			
 			div.remove();
 		}
@@ -869,151 +705,87 @@ function createTextArea(placeHolder, value) {
 }
 
 function buildCombatModule(atacks) {
+	var x = document.getElementById("atacks1");
+	var y = document.getElementById("atacks2");
 	
-	// var ataques = {
-        // "104dcb00-08f2-4aeb-9008-27c5baff35c4": {
-            // dice: "1d8",
-            // diceLabel: "d8",
-            // weapon: "Arco Largo",
-            // power: 7,
-            // mod: "str",
-            // distance: "100'"
-        // },
-        // "31731c26-7f0a-4319-83d1-f3605e1d44eb": {
-            // dice: "1d4",
-            // diceLabel: "d4",
-            // weapon: "Daga",
-            // power: 7,
-            // mod: "str",
-            // distance: "10'"
-        // },
-        // "eadc9146-6e11-4992-bd6d-a05af96de625": {
-            // dice: "1d4",
-            // diceLabel: "d4",
-            // weapon: "Laud Azul",
-            // power: 4,
-            // mod: "str",
-            // distance: null
-        // },
-        // "7eebd0d0-903e-48f5-8360-b65a2b6ae81f": {
-            // dice: "1d4 + 3",
-            // diceLabel: "d4",
-            // weapon: "Arco largo mejorado",
-            // power: 7,
-            // mod: "str",
-            // distance: "100'"
-        // }
-    // };
-	var pruebas2 = document.getElementById("pruebas2");
-	//pruebas2.innerHTML = "<button id=\"atk04\" class=\"field-dado\" data-modifier=\"atk4\" data-dice-type=\"1d20\" data-label=\"Ataque4\"><i class=\"ts-icon-d20 ts-icon-small\" style=\"margin-right: 0.2em;\"></i>Ataque 4</button>";
-	//pruebas2.innerHTML = '\n\t\t\t\t\t\t\x3C!-- <input id="atk4" type="number" class="field-data-short"></input><label class="field-title"><input id="espacio4" type="text" class="field-data"></input></label> -->\n\t\t\t\t\t<input id="atk4" type="number" class="field-data-short"><label class="field-title"><input id="espacio4" type="text" class="field-data"></label>'
-	var button1 = document.createElement("button");
-	button1.className = "field-dado";
-	// button1.setAttribute("data-modifier", "atk4");
-	//button1.setAttribute("data-dice-type", "1d20");
-	button1["data-dice-type"] = "1d20";
-	// button1.setAttribute("data-label", "Ataque4");
-	// var i0 = document.createElement("i");
-	// i0.className = "ts-icon-d20 ts-icon-small";
-	// i0.setAttribute("style", "margin-right: 0.2em;");
-	// button1.appendChild(i0);
-	var textData0 = document.createTextNode("Ataque 7");
-	button1.appendChild(textData0);
-	pruebas2.appendChild(button1);
-	// var x = document.getElementById("combate1");
-	// var y = document.getElementById("combate2");
-	// var pruebas = document.getElementById("pruebas");
-	// var input = document.createElement("input");
-	// //input.id = "atk4";
-	// input.type = "number";
-	// input.className = "field-data-short";
-	// pruebas.appendChild(input);
-	
-	// var labelInput = document.createElement("label");
-	// labelInput.className = "field-title";
-	
-	// var input2 = document.createElement("input");
-	// input2.id = "espacio4";
-	// input2.type = "text";
-	// input2.className = "field-data";
-	// labelInput.appendChild(input2);
-	// //pruebas.appendChild(labelInput);
-	
-	
-	// var number = 1;
-	// Object.entries(atacks).forEach((atack) => {
-	// //Object.entries(ataques).forEach((atack) => {
-		// // "identifier":{
-			// // "dice": "d8", //dado daño
-			// // "dice-qt": 1,
-			// // "weapon": "example", //nombre arma
-			// // "power": 8, //modificador tirada D20
-			// // "mod": "str" // modificador daño
-			// // "distance": "100'"
-		// // }
+	var number = 1;
+	Object.entries(atacks).forEach((atack) => {
+		//fill column2
+		var inputsDiv = document.createElement("div");
+		inputsDiv.className = "content-row";
 		
-		// //fill column1
-		// var buttonsDiv = document.createElement("div");
-		// buttonsDiv.className = "content-row";
+		var inputValue = document.createElement("input");
+		inputValue.type = "number";
+		inputValue.id = atack[0];
+		inputValue.setAttribute("value", atack[1].power);
+		inputValue.className = "field-data-short";
 		
-		// var button1 = document.createElement("button");
-		// button1.className = "field-dado";
-		// button1.setAttribute("data-modifier", atack[0]);
-		// // button1.setAttribute("data-dice-type", "1d20");
-		// button1.setAttribute('data-dice-type', '1d20');
-		// // var label = `Ataque${number}`;
-		// // button1.setAttribute("data-label", label);
-		// var i0 = document.createElement("i");
-		// i0.className = "ts-icon-d20 ts-icon-small";
-		// i0.setAttribute("style", "margin-right: 0.2em;");
-		// button1.appendChild(i0);
-		// // var textData0 = document.createTextNode(`Ataque ${number}`);
-		// // button1.appendChild(textData0);
-		// buttonsDiv.appendChild(button1);
+		inputsDiv.appendChild(inputValue);
 		
-		// var button2 = document.createElement("button");
-		// button2.className = "field-dado";
-		// button2.setAttribute("data-modifier", atack[0]);
-		// button2.setAttribute("data-dice-type", atack[1].dice);
-		// // var label = `Ataque${number}`;
-		// // button2.setAttribute("data-label", label);
-		// var i = document.createElement("i");
-		// i.className = `ts-icon-${atack[1].diceLabel} ts-icon-small`;
-		// i.setAttribute("style", "margin-right: 0.2em;");
-		// button2.appendChild(i);
-		// //var value = "Da&ntilde;o";
-		// var value = "Da\u00f1o"
-		// // var textData = document.createTextNode(`${value} ${number}`);
-		// // button2.appendChild(textData);
-		// buttonsDiv.appendChild(button2);
-		// x.appendChild(buttonsDiv);
+		var labelInput = document.createElement("label");
+		labelInput.className = "field-title";
 		
-		// //fill column2
-		// var inputsDiv = document.createElement("div");
-		// inputsDiv.className = "content-row";
+		var input2 = document.createElement("input");
+		input2.type = "text";
+		input2.setAttribute("value", atack[1].weapon);
+		input2.className = "field-data";
+		labelInput.appendChild(input2);
+		inputsDiv.appendChild(labelInput);
+		//fill column1
+		var buttonsDiv = document.createElement("div");
+		buttonsDiv.className = "content-row";
 		
-		// var inputValue = document.createElement("input");
-		// inputValue.type = "number";
-		// inputValue.id = atack[0];
-		// inputValue.setAttribute("value", atack[1].power);
-		// inputValue.className = "field-data-short";
+		var button1 = document.createElement("button");
+		button1.className = "field-dado";
+		button1.setAttribute("data-modifier", atack[0]);
+		button1.setAttribute('data-dice-type', '1d20');
+		var label = `Ataque${number}`;
+		button1.setAttribute("data-label", label);
+		button1.setAttribute("mod", atack[1].mod);
+		var i0 = document.createElement("i");
+		i0.className = "ts-icon-d20 ts-icon-small";
+		i0.setAttribute("style", "margin-right: 0.2em;");
+		button1.appendChild(i0);
+        button1.addEventListener("click", (event) => {
+			TS.dice.putDiceInTray([createDiceRoll(button1, inputValue)]);
+            //we are not checking for success or failure here, but could easily by adding a .then (success) and .catch (failure)
+        });
+		var textData0 = document.createTextNode(`Ataque ${number}`);
+		button1.appendChild(textData0);
+		buttonsDiv.appendChild(button1);
 		
-		// inputsDiv.appendChild(inputValue);
+		var button2 = document.createElement("button");
+		button2.className = "field-dado";
+		button2.setAttribute("data-modifier", atack[0]);
+		button2.setAttribute("data-dice-type", atack[1].dice);
+		var label = `Daño${number}`;
+		button2.setAttribute("data-label", label);
+		var i = document.createElement("i");
+		i.className = `ts-icon-${atack[1].diceLabel} ts-icon-small`;
+		i.setAttribute("style", "margin-right: 0.2em;");
+		button2.appendChild(i);
+        button2.addEventListener("click", function() {
+            TS.dice.putDiceInTray([createDiceRoll(button2, null)]);
+            //we are not checking for success or failure here, but could easily by adding a .then (success) and .catch (failure)
+        });
+		var value = "Da\u00f1o"
+		var textData = document.createTextNode(`${value} ${number}`);
+		button2.appendChild(textData);
+		buttonsDiv.appendChild(button2);
+		x.appendChild(buttonsDiv);
+		// <select id="atk1t" title="select" name="atk1" class="select">
+		  // <option value="none" selected disabled>-</option>
+		  // <option value="strm">FUE</option>
+		  // <option value="dexm">DEX</option>
+		  // <option value="conm">CON</option>
+		  // <option value="intm">INT</option>
+		  // <option value="wism">SAB</option>
+		  // <option value="cham">CAR</option>
+		// </select>
+		y.appendChild(inputsDiv);
 		
-		// var labelInput = document.createElement("label");
-		// labelInput.className = "field-title";
-		
-		// var input2 = document.createElement("input");
-		// input2.type = "text";
-		// input2.setAttribute("value", atack[1].weapon);
-		// input2.className = "field-data";
-		// labelInput.appendChild(input2);
-		// inputsDiv.appendChild(labelInput);
-		
-		// y.appendChild(inputsDiv);
-		
-		// // number++;
-	// });
+		number++;
+	});
 }
 
 function buildDefenseModule() {
@@ -1111,7 +883,7 @@ function buildDefenseModule() {
 	var column3Data = [
 		{
 			name: "RD",
-			description: "Reduccion danyo",
+			description: "Reduccion daño",
 			id: "RD",
 			type: "number",
 			dice: undefined
@@ -1156,7 +928,6 @@ function buildContent(contentData) {
 	description.style.color = "white";
 	var descriptionPTexto = document.createTextNode(contentData.description);
 	description.appendChild(descriptionPTexto);
-	//description.appendChild(descriptionP);
 	content.appendChild(description);
 	
 	//Name
@@ -1241,4 +1012,62 @@ function onStateChangeEvent(msg) {
         loadStoredData();
         initSheet();
     }
+}
+
+function buildSelector(id, name, selected, options){
+	let select = document.createElement("select");
+	select.className = "select";
+	select.id = id;
+	select.title = "select";
+	select.name = name;
+	
+	// var default = false;
+	// if (!selected) default = true;
+	
+	
+	
+	//default
+	let option1 = buildOption("none", "-", !selected, true);
+	
+	//FUE
+    let option2 = buildOption("strm", "FUE", false, false);
+	
+	//DEX
+    let option3 = buildOption("dexm", "DEX", false, false);
+	
+	//CON
+	let option4 = buildOption("conm", "CON", false, false);
+	
+	//INT
+	let option5 = buildOption("intm", "INT", false, false);
+	
+	//SAB
+	let option6 = buildOption("wism", "SAB", false, false);
+	
+	//CAR
+	let option7 = buildOption("cham", "CAR", false, false);
+ 
+    select.appendChild(option1);
+    select.appendChild(option2);
+    select.appendChild(option3);
+	select.appendChild(option4);
+	select.appendChild(option5);
+	select.appendChild(option6);
+	select.appendChild(option7);
+	if (selected) select.value = selected;
+	
+	return select;
+}
+
+function buildOption(value, text, selected, disabled) {
+	
+	let option = document.createElement("option");
+    option.setAttribute("value", value);
+	if (selected) option.setAttribute("selected", "selected");
+	if (disabled) option.setAttribute("disabled", "disabled");
+	
+    let option1Texto = document.createTextNode(text);
+    option.appendChild(option1Texto);
+	
+	return option;
 }

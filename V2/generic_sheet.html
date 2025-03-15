@@ -4,6 +4,39 @@
 		<title>Character Sheet</title>
 		<link rel="stylesheet" href="generic_sheet.css">
 		<script src="generic_sheet.js" defer></script>
+		<meta charset="UTF-8">
+		  <style>
+			.abilities-container {
+			  display: flex;
+			  gap: 20px;
+			  flex-wrap: wrap;
+			}
+
+			.abilities-container.columns-2 {
+			  flex-basis: 50%;
+			}
+
+			.abilities-container .content-row {
+			  display: flex;
+			  align-items: center;
+			  margin-bottom: 10px;
+			}
+
+			.abilities-container .field-title {
+			  flex-basis: 60%;
+			  margin-right: 40px;
+			  white-space: nowrap;
+			  overflow: hidden;
+			  text-overflow: ellipsis;
+			}
+
+			.abilities-container .field-data {
+			  flex-basis: 60%;
+			  box-sizing: border-box;
+			  width: 100%;
+			  max-width: 150px;
+			}
+		  </style>
 	</head>
 
 	<body>
@@ -100,7 +133,7 @@
 			</div>
 		</div>
 		<div class="contenedor">
-			<ul id="ul" class="ul">
+			<ul id="ul" id="ul">
 				<li index="0" class="li activo">Habilidades</li>
 				<li index="1" class="li">Combate</li>
 				<li index="2" class="li">Magias</li>
@@ -136,7 +169,7 @@
 							<input id="Disff" type="checkbox" class="field-data-short"></input><label class="field-title" data-dice-type="1d20" data-label="Disff">Disfrazarse</label><input id="insight" type="number" class="field-data align input"></input>
 						</div>
 						<div class="content-row">
-							<input id="Engg" type="checkbox" class="field-data-short"></input><label class="field-title" data-dice-type="1d20" data-label="Eng">Enga&ntilde;ar</label><input id="intim" type="number" class="field-data align input"></input>
+							<input id="Engg" type="checkbox" class="field-data-short"></input><label class="field-title" data-dice-type="1d20" data-label="Eng">Engañar</label><input id="intim" type="number" class="field-data align input"></input>
 						</div>
 						<div class="content-row">
 							<input id="Escc" type="checkbox" class="field-data-short"></input><label class="field-title" data-dice-type="1d20" data-label="Esc">Escapismo</label><input id="invest" type="number" class="field-data align input"></input>
@@ -236,7 +269,7 @@
 			<div class="content-row" style="width: 100%">
 				<h1>Defensa</h1>
 				<div class="content-row">
-					<label class="field-title">RD</label><input id="RD" type="number" class="field-data-short"></input><p class="field-desc">Reduccion da&ntilde;o</p>
+					<label class="field-title">RD</label><input id="RD" type="number" class="field-data-short"></input><p class="field-desc">Reduccion daño</p>
 			</div>
 			</div>
 				<div class="container">
@@ -591,13 +624,13 @@
 				</div>
 			</div>
 			<div class="container">
-				<h1>Habitacion</h1>
+				<h1>Habitación</h1>
 				<div class="content-row">
 					<textarea id="habitacion-text"></textarea>
 				</div>
 			</div>
 			<div class="container">
-				<h1>Languajes</h1>
+				<h1>Idiomas</h1>
 				<div class="content-row">
 					<textarea id="languages-text"></textarea>
 				</div>
